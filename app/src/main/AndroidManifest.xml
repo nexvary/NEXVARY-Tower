@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <!-- Intentionally NO INTERNET permission: cellular analysis stays on-device. -->
+    <application
+        android:allowBackup="false"
+        android:usesCleartextTraffic="false"
+        android:fullBackupContent="false"
+        android:label="NEXVARY IMSI Detector"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:theme="@style/Theme.Nexvary"
+        android:supportsRtl="true">
+        <activity android:name=".OnboardingActivity" android:exported="true" android:screenOrientation="unspecified">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".MainActivity" android:exported="false" android:screenOrientation="unspecified" />
+        <activity android:name=".HistoryActivity" android:exported="false" />
+        <activity android:name=".BaselinesActivity" android:exported="false" />
+        <activity android:name=".PrivacyActivity" android:exported="false" />
+        <activity android:name=".AboutActivity" android:exported="false" />
+        <provider
+            android:name=".ReportFileProvider"
+            android:authorities="${applicationId}.files"
+            android:exported="false"
+            android:grantUriPermissions="true">
+        </provider>
+    </application>
+</manifest>

@@ -1,0 +1,12 @@
+<resources>
+    <color name="bg">#02070D</color>
+    <color name="panel">#07121E</color>
+    <color name="panel2">#091A2B</color>
+    <color name="blue">#1597FF</color>
+    <color name="blue2">#72C8FF</color>
+    <color name="red">#FF2448</color>
+    <color name="green">#55F08A</color>
+    <color name="text">#F4F8FC</color>
+    <color name="muted">#8EA4B8</color>
+    <color name="launcher_bg">#03111B</color>
+</resources>

@@ -89,7 +89,10 @@ public class MainActivity extends Activity {
 
     private void ensureAndScan(boolean fromLive) {
         List<String> missing = new ArrayList<>();
-        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) missing.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            missing.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+            missing.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
         if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) missing.add(Manifest.permission.READ_PHONE_STATE);
         if (!missing.isEmpty()) {
             requestPermissions(missing.toArray(new String[0]), REQ);
@@ -101,8 +104,7 @@ public class MainActivity extends Activity {
     @Override public void onRequestPermissionsResult(int r, String[] p, int[] g) {
         super.onRequestPermissionsResult(r, p, g);
         if (r == REQ) {
-            boolean ok = g.length > 0;
-            for (int x : g) if (x != PackageManager.PERMISSION_GRANTED) ok = false;
+            boolean ok = hasPermissions();
             if (ok) scan(false);
             else {
                 riskTitle.setText(t("Permissions required","الصلاحيات مطلوبة"));
@@ -144,22 +146,30 @@ public class MainActivity extends Activity {
             List<String> neighborIds = new ArrayList<>();
 
             if (cells != null) for (CellInfo c : cells) {
+                if (!MeasurementPolicy.isRecent(SystemClock.elapsedRealtime(), c.getTimeStamp() / 1_000_000L, 30_000L)) continue;
                 int dbm = signalDbm(c);
                 int q = signalQuality(c);
-                if (dbm > bestDbm) bestDbm = dbm;
-                if (q != -999 && (bestQuality == -999 || q > bestQuality)) bestQuality = q;
                 if (c.isRegistered()) {
                     registered++;
-                    servingId = identity(c);
+                    if (registered == 1 || dbm > bestDbm) { servingId = identity(c); bestDbm = dbm; bestQuality = q; }
                 } else {
                     neigh++;
                     neighborIds.add(identity(c));
                 }
             }
+            if (registered != 1 || servingId.equals("—")) {
+                latest = null; radar.setRisk(-1);
+                riskTitle.setText(t("Insufficient or ambiguous telemetry", "بيانات غير كافية أو ملتبسة"));
+                riskSummary.setText(t("No unique fresh serving cell. No risk score was calculated.", "لا توجد خلية خدمة حديثة ومحددة. لم تُحسب درجة شذوذ."));
+                whyFlagged.setText(t("Measurement unavailable", "القياس غير متاح"));
+                operator.setText(t("Operator: —", "المشغل: —")); radio.setText(t("Radio: —", "الشبكة: —")); serving.setText(t("Serving cell: —", "الخلية الحالية: —")); neighbors.setText(t("Neighbor cells: —", "الخلايا المجاورة: —")); signal.setText(t("Signal: —", "الإشارة: —")); neighborState.setText("—");
+                return;
+            }
             Collections.sort(neighborIds);
             String neighborSignature = compactSignature(neighborIds);
             List<ScanRecord> old = loadHistory();
             ScanRecord previous = old.isEmpty() ? null : old.get(old.size() - 1);
+            if (previous != null && !MeasurementPolicy.isRecent(System.currentTimeMillis(), previous.at, 120_000L)) previous = null;
             List<String> bases = loadBaselines();
 
             Assessment a = assess(op, rat, servingId, neigh, registered, bestDbm, bestQuality, neighborSignature, previous, bases);
@@ -194,6 +204,7 @@ public class MainActivity extends Activity {
             refreshLocalPanels();
             if (rat.contains("2G") && (previous == null || !previous.radio.contains("2G")) && !fromLive) show2GWarning();
         } catch (SecurityException e) {
+            latest = null; radar.setRisk(-1);
             riskTitle.setText(t("Permission unavailable","الصلاحية غير متاحة"));
             riskSummary.setText(t("Android restricted cellular telemetry. Check app permissions and Location services.","قيّد Android بيانات الشبكة الخلوية. تحقق من صلاحيات التطبيق وخدمات الموقع."));
             if (liveMonitoring) stopLiveMonitoring("Live monitoring stopped · permission unavailable");
@@ -204,9 +215,7 @@ public class MainActivity extends Activity {
         int risk = 0;
         List<String> reasons = new ArrayList<>();
         if (rat.contains("2G")) { risk += 30; reasons.add("30 · active radio is 2G/GSM"); }
-        if (registered == 0) { risk += 18; reasons.add("18 · no registered serving cell was exposed by Android"); }
-        if (registered > 1) { risk += 7; reasons.add("7 · multiple cells are marked registered"); }
-        if (neigh == 0) { risk += 9; reasons.add("9 · no neighboring cells were reported"); }
+        // Missing or multiple cells are limitations of telemetry, not evidence of a threat.
         if (bestDbm > -55 && bestDbm != -999) { risk += 5; reasons.add("5 · unusually strong cellular signal (context-dependent)"); }
         if (quality != -999 && quality < -20) { risk += 3; reasons.add("3 · poor signal-quality metric despite available service"); }
 
@@ -241,6 +250,7 @@ public class MainActivity extends Activity {
         int recent2G = 0;
         for (int i = from; i < recent.size(); i++) {
             ScanRecord r = recent.get(i);
+            if (!MeasurementPolicy.isRecent(System.currentTimeMillis(), r.at, 120_000L)) continue;
             if (r.cell != null && !r.cell.isEmpty() && !r.cell.equals("—")) recentCells.add(r.cell);
             if (r.radio != null && !r.radio.isEmpty()) {
                 recentRadios.add(r.radio);

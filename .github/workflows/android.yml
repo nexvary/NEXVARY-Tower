@@ -16,8 +16,11 @@ jobs:
           java-version: '17'
       - uses: gradle/actions/wrapper-validation@v4
       - uses: gradle/actions/setup-gradle@v4
-      - uses: android-actions/setup-android@v3
-      - run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
+      - name: Ensure Android SDK 35 is installed
+        run: |
+          if [[ ! -f "$ANDROID_HOME/platforms/android-35/android.jar" || ! -x "$ANDROID_HOME/build-tools/35.0.0/aapt2" ]]; then
+            sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
+          fi
       - name: Timestamp policy unit tests
         run: |
           mkdir -p /tmp/tower-tests

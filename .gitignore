@@ -4,3 +4,13 @@ local.properties
 **/build/
 *.jks
 *.keystore
+*.p12
+*.pfx
+*.pem
+*.key
+.env
+.env.*
+keystore.properties
+signing.properties
+*.apk
+*.aab

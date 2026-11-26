@@ -1,0 +1,8 @@
+# NEXVARY Tower Guard
+
+- Develop on `feature/v1-production` for v1.0.0. Keep application ID `com.nexvary.imsi` and preserve existing features and data. Read [Issue #1](https://github.com/nexvary/NEXVARY-Tower/issues/1), [ROADMAP.md](ROADMAP.md), and the latest entry in [DEVELOPMENT_LOG.md](DEVELOPMENT_LOG.md). Update the log after each completed stage. Request review through a draft PR and leave merging to the owner.
+- Keep cellular analysis on-device. Minimize permissions and retention. Preserve Android Keystore encryption and restrict report sharing and cache lifetime. Keep device identifiers, personal samples, credentials, signing files, and private logs out of Git. Document migrations and test upgrades.
+- Reduce false alerts. Use fresh serving-cell observations with known subscription context. Treat stale, absent, or ambiguous measurements as insufficient evidence. Validate against ordinary handovers and Dual SIM behavior. Describe anomaly scores as heuristics and use measured data only in charts and reports.
+- Use the supplied Nexvary logo, icons, and existing dark palette. Check readable contrast, concise labels, Arabic RTL, and English LTR. Update both string resource files together.
+- Run `./gradlew :app:lintDebug :app:testDebugUnitTest :app:assembleDebug` and the timestamp tests in the Android workflow. Test measurement and permission changes on supported Android versions, including Android 15 and Dual SIM. Record which checks ran and their results.
+- Company links include [nexvary.com](https://nexvary.com), [support](https://nexvary.com/contact), [privacy](https://nexvary.com/privacy), and [GitHub](https://github.com/nexvary). Use `info@nexvary.com` for public contact. Release signing and licensing decisions require owner approval.

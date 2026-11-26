@@ -8,7 +8,7 @@
         android:allowBackup="false"
         android:usesCleartextTraffic="false"
         android:fullBackupContent="false"
-        android:label="NEXVARY IMSI Detector"
+        android:label="@string/app_name"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -21,7 +21,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" android:exported="false" android:screenOrientation="unspecified" />
+        <activity android:name=".CellsActivity" android:exported="false" android:screenOrientation="unspecified" />
         <activity android:name=".HistoryActivity" android:exported="false" />
+        <activity android:name=".ReportsActivity" android:exported="false" />
+        <activity android:name=".MoreActivity" android:exported="false" />
         <activity android:name=".BaselinesActivity" android:exported="false" />
         <activity android:name=".PrivacyActivity" android:exported="false" />
         <activity android:name=".AboutActivity" android:exported="false" />

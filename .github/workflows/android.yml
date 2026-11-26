@@ -1,0 +1,34 @@
+name: Android verification
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/wrapper-validation@v4
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Ensure Android SDK 35 is installed
+        run: |
+          if [[ ! -f "$ANDROID_HOME/platforms/android-35/android.jar" || ! -x "$ANDROID_HOME/build-tools/35.0.0/aapt2" ]]; then
+            sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
+          fi
+      - name: Timestamp policy unit tests
+        run: |
+          mkdir -p /tmp/tower-tests
+          javac --release 17 -d /tmp/tower-tests app/src/main/java/com/nexvary/imsi/MeasurementPolicy.java tests/MeasurementPolicyTest.java
+          java -cp /tmp/tower-tests com.nexvary.imsi.MeasurementPolicyTest
+      - run: ./gradlew --no-daemon :app:lintDebug :app:testDebugUnitTest :app:assembleDebug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: NEXVARY-Tower-debug
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error

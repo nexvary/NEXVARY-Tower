@@ -13,7 +13,7 @@ public final class ReportExporter {
     public static File create(Context c, List<ScanRecord> history, List<String> baselines) throws Exception {
         File dir = new File(c.getCacheDir(), "reports");
         if (!dir.exists() && !dir.mkdirs()) throw new IOException("Cannot create report directory");
-        File f = new File(dir, "NEXVARY-IMSI-Report-" + System.currentTimeMillis() + ".pdf");
+        File f = new File(dir, "NEXVARY-Tower-Report-" + System.currentTimeMillis() + ".pdf");
         PdfDocument doc = new PdfDocument();
         Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
         int pageNo = 1, idx = 0;
@@ -21,8 +21,8 @@ public final class ReportExporter {
             PdfDocument.Page page = doc.startPage(new PdfDocument.PageInfo.Builder(1240, 1754, pageNo++).create());
             Canvas cv = page.getCanvas();
             cv.drawColor(Color.rgb(5, 11, 18));
-            p.setColor(Color.WHITE); p.setTextSize(52); p.setFakeBoldText(true); cv.drawText("NEXVARY IMSI DETECTOR", 70, 95, p);
-            p.setFakeBoldText(false); p.setTextSize(22); p.setColor(Color.rgb(17, 177, 255)); cv.drawText("LOCAL CELLULAR ANOMALY REPORT · v0.3", 70, 135, p);
+            p.setColor(Color.WHITE); p.setTextSize(52); p.setFakeBoldText(true); cv.drawText("NEXVARY TOWER GUARD", 70, 95, p);
+            p.setFakeBoldText(false); p.setTextSize(22); p.setColor(Color.rgb(17, 177, 255)); cv.drawText("LOCAL CELLULAR ANOMALY REPORT · " + BuildConfig.VERSION_NAME, 70, 135, p);
             p.setColor(Color.rgb(180, 198, 214)); p.setTextSize(18); cv.drawText("Generated: " + DateFormat.getDateTimeInstance().format(new Date()), 70, 175, p);
             cv.drawText("Baselines stored: " + baselines.size() + "   ·   History entries: " + history.size(), 70, 205, p);
             p.setColor(Color.rgb(255, 90, 104)); p.setTextSize(17); cv.drawText("Important: anomaly indicators are not proof of an IMSI catcher.", 70, 240, p);
@@ -39,7 +39,7 @@ public final class ReportExporter {
                 y += 108; count++;
             }
             if (history.isEmpty()) { p.setColor(Color.rgb(180, 198, 214)); p.setTextSize(22); cv.drawText("No scan history has been recorded yet.", 70, 330, p); idx = 1; }
-            p.setColor(Color.rgb(90, 115, 136)); p.setTextSize(15); cv.drawText("NEXVARY · Defensive diagnostic report · Data generated and stored locally on this device", 70, 1690, p);
+            p.setColor(Color.rgb(90, 115, 136)); p.setTextSize(15); cv.drawText("NEXVARY INC. · nexvary.com · Defensive diagnostic report", 70, 1690, p);
             doc.finishPage(page);
         }
         try (FileOutputStream os = new FileOutputStream(f)) { doc.writeTo(os); }

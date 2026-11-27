@@ -1,5 +1,15 @@
 plugins { id 'com.android.application' }
 
+def releaseVersionCode = 9
+def upgradeTest = providers.gradleProperty('towerUpgradeBaseline').isPresent()
+def signingInputs = [
+    'TOWER_KEYSTORE_PATH', 'TOWER_STORE_PASSWORD', 'TOWER_KEY_ALIAS', 'TOWER_KEY_PASSWORD'
+].collectEntries { name -> [(name): providers.environmentVariable(name).orNull] }
+def signedRelease = signingInputs.values().every { it }
+if (!signedRelease && signingInputs.values().any { it }) {
+    throw new GradleException('Release signing requires all four TOWER signing inputs.')
+}
+
 android {
     namespace 'com.nexvary.imsi'
     compileSdk 35
@@ -8,12 +18,23 @@ android {
         applicationId 'com.nexvary.imsi'
         minSdk 29
         targetSdk 35
-        versionCode 6
-        versionName '0.6.0-rc1'
+        versionCode(upgradeTest ? releaseVersionCode - 1 : releaseVersionCode)
+        versionName(upgradeTest ? '1.0.0-upgrade-test' : '1.0.0')
     }
 
+    signingConfigs {
+        if (signedRelease) {
+            release {
+                storeFile file(signingInputs.TOWER_KEYSTORE_PATH)
+                storePassword signingInputs.TOWER_STORE_PASSWORD
+                keyAlias signingInputs.TOWER_KEY_ALIAS
+                keyPassword signingInputs.TOWER_KEY_PASSWORD
+            }
+        }
+    }
     buildTypes {
         release {
+            if (signedRelease) signingConfig signingConfigs.release
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -23,3 +44,14 @@ android {
 }
 
 dependencies { } // No AndroidX dependency: native Android APIs only
+
+// Keep debug and lint usable without credentials, but fail release packaging.
+tasks.configureEach {
+    if (name in ['packageRelease', 'packageReleaseBundle']) {
+        doFirst {
+            if (!signedRelease) {
+                throw new GradleException('Release packaging requires the permanent Tower Guard signing key.')
+            }
+        }
+    }
+}

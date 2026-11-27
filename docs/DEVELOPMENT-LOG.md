@@ -36,3 +36,9 @@
 - Circular gauge color thresholds require field validation.
 - Landscape orientation: layout tested only conceptually.
 - CellsActivity SINR / PCI field population depends on device CellInfo availability.
+
+## Permanent release signing
+
+Prepared Gradle signing for the existing com.nexvary.imsi application and a manual release workflow with a pinned certificate fingerprint, APK checksum and isolated emulator upgrade gate. The release code is 9 and the emulator baseline is 8, above the highest version code observed in repository history (7). The owner must confirm the highest distributed build before signing. Existing English and Arabic launcher labels already use NEXVARY Tower Guard. See [release signing](RELEASE-SIGNING.md) for legacy certificate checks and recovery.
+
+Local Android regression and release checks remain blocked. The Gradle wrapper could not download its distribution in this environment. A qualifying owner key has yet to be confirmed, and no APK or upgrade result is available.

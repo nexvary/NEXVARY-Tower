@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   quality:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
         with:
@@ -26,6 +26,8 @@ jobs:
       - uses: gradle/actions/wrapper-validation@v4
       - name: Verify Release lint and regression tests
         run: ./gradlew --no-daemon :app:lintRelease :app:testReleaseUnitTest
+      - uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 # v3.2.2
+        if: github.ref == 'refs/heads/feature/tower-guard-production-release'
       - name: Build isolated QA APKs with a disposable CI key
         if: github.ref == 'refs/heads/feature/tower-guard-production-release'
         id: preflight
@@ -57,7 +59,7 @@ jobs:
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
-      - uses: reactivecircus/android-emulator-runner@v2
+      - uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2
         if: steps.preflight.outcome == 'success'
         env:
           RELEASE_VERSION: ${{ steps.preflight.outputs.version }}
@@ -70,7 +72,7 @@ jobs:
   sign:
     if: github.ref == 'refs/heads/release/tower-guard-signed'
     needs: quality
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment: tower-guard-release
     steps:
       - uses: actions/checkout@v4
@@ -81,6 +83,7 @@ jobs:
           distribution: temurin
           java-version: '17'
       - uses: gradle/actions/wrapper-validation@v4
+      - uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 # v3.2.2
       - name: Install Android SDK packages
         run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
       - name: Build and sign release and upgrade baseline
@@ -142,7 +145,7 @@ jobs:
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
-      - uses: reactivecircus/android-emulator-runner@v2
+      - uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2
         env:
           RELEASE_VERSION: ${{ steps.verify.outputs.version }}
         with:

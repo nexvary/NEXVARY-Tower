@@ -130,6 +130,7 @@ public class MoreActivity extends Activity {
 
         TextView lbl = new TextView(this);
         lbl.setText(label);
+        lbl.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
         lbl.setTextColor(Color.rgb(192, 192, 192));
         lbl.setTextSize(14f);
         lbl.setLayoutParams(new LinearLayout.LayoutParams(0, -2, 1f));

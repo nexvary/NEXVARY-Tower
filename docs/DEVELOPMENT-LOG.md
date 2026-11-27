@@ -117,3 +117,4 @@ versionCode 7 / versionName 0.7.0
 - CI runs lintDebug, assembleDebug and testDebugUnitTest. The new JVM tests check the five navigation vectors and Reports path bounds.
 - Debug version is 0.7.0 (7). OPPO CPH2577 hardware acceptance and owner approval for permanent signing are pending.
 - Language switching rebuilds the tab stack so re-opened tabs use the selected locale. Returning to previously opened tabs reapplies the current screenshot preference.
+- Android 15 emulator review exposed clipping in the Knowledge Center artwork. Reworked the radio arcs, eye, info circle and radar paths so they fit their vector viewports.

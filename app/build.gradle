@@ -1,5 +1,15 @@
 plugins { id 'com.android.application' }
 
+def releaseVersionCode = 9
+def upgradeTest = providers.gradleProperty('towerUpgradeBaseline').isPresent()
+def signingInputs = [
+    'TOWER_KEYSTORE_PATH', 'TOWER_STORE_PASSWORD', 'TOWER_KEY_ALIAS', 'TOWER_KEY_PASSWORD'
+].collectEntries { name -> [(name): providers.environmentVariable(name).orNull] }
+def signedRelease = signingInputs.values().every { it }
+if (!signedRelease && signingInputs.values().any { it }) {
+    throw new GradleException('Release signing requires all four TOWER signing inputs.')
+}
+
 android {
     namespace 'com.nexvary.imsi'
     compileSdk 35
@@ -12,8 +22,19 @@ android {
         versionName '0.7.0'
     }
 
+    signingConfigs {
+        if (signedRelease) {
+            release {
+                storeFile file(signingInputs.TOWER_KEYSTORE_PATH)
+                storePassword signingInputs.TOWER_STORE_PASSWORD
+                keyAlias signingInputs.TOWER_KEY_ALIAS
+                keyPassword signingInputs.TOWER_KEY_PASSWORD
+            }
+        }
+    }
     buildTypes {
         release {
+            if (signedRelease) signingConfig signingConfigs.release
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -23,3 +44,23 @@ android {
 }
 
 dependencies { testImplementation 'junit:junit:4.13.2' }
+
+// Keep the approved debug version and apply the distribution code only to Release.
+androidComponents {
+    onVariants(selector().withBuildType('release')) { variant ->
+        variant.outputs.each { output ->
+            output.versionCode.set(upgradeTest ? releaseVersionCode - 1 : releaseVersionCode)
+        }
+    }
+}
+
+// Lint and unit tests can run without credentials, while release packaging requires them.
+tasks.configureEach {
+    if (name in ['packageRelease', 'packageReleaseBundle']) {
+        doFirst {
+            if (!signedRelease) {
+                throw new GradleException('Release packaging requires the permanent Tower Guard signing key.')
+            }
+        }
+    }
+}

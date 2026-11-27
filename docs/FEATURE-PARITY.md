@@ -40,4 +40,4 @@ Last updated: 2026-11-27
 |---|---|---|
 | Fixed navigation | Partial | Equal icon slots with fit-center scaling, readable labels and explicit RTL/LTR direction. JVM drawable tests cover palette and viewport regressions. |
 | More and Security Knowledge Center | Partial | Direction-aware compact rows, accessible screenshot Switch, and higher-contrast educational disclaimer. OPPO device and TalkBack acceptance pending. |
-| Release signing | Blocked | Owner review of the Debug APK must precede permanent signing. |
+| Release signing | Blocked | Approved Debug commit frozen. Release signing and Android 15 acceptance require the owner-controlled keystore and confirmed distribution version record. |

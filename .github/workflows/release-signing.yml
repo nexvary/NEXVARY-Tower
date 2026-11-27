@@ -1,0 +1,130 @@
+name: Tower Guard signed APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [feature/tower-guard-production-release, release/tower-guard-signed]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tower-guard-signing-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/wrapper-validation@v4
+      - name: Verify Release lint and regression tests
+        run: ./gradlew --no-daemon :app:lintRelease :app:testReleaseUnitTest
+
+  sign:
+    if: github.ref == 'refs/heads/release/tower-guard-signed'
+    needs: quality
+    runs-on: ubuntu-latest
+    environment: tower-guard-release
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/wrapper-validation@v4
+      - name: Install Android SDK packages
+        run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
+      - name: Build and sign release and upgrade baseline
+        shell: bash
+        env:
+          TOWER_KEYSTORE_BASE64: ${{ secrets.TOWER_KEYSTORE_BASE64 }}
+          TOWER_STORE_PASSWORD: ${{ secrets.TOWER_STORE_PASSWORD }}
+          TOWER_KEY_ALIAS: ${{ secrets.TOWER_KEY_ALIAS }}
+          TOWER_KEY_PASSWORD: ${{ secrets.TOWER_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          : "${TOWER_KEYSTORE_BASE64:?Missing keystore secret}"
+          : "${TOWER_STORE_PASSWORD:?Missing store password secret}"
+          : "${TOWER_KEY_ALIAS:?Missing alias secret}"
+          : "${TOWER_KEY_PASSWORD:?Missing key password secret}"
+          umask 077
+          TOWER_KEYSTORE_PATH="$(mktemp "$RUNNER_TEMP/tower-keystore.XXXXXX")"
+          export TOWER_KEYSTORE_PATH
+          trap 'rm -f -- "$TOWER_KEYSTORE_PATH"' EXIT
+          printf '%s' "$TOWER_KEYSTORE_BASE64" | base64 --decode > "$TOWER_KEYSTORE_PATH"
+          unset TOWER_KEYSTORE_BASE64
+          mkdir -p "$RUNNER_TEMP/tower-apks"
+          ./gradlew --no-daemon :app:assembleRelease -PtowerUpgradeBaseline
+          mv app/build/outputs/apk/release/app-release.apk "$RUNNER_TEMP/tower-apks/baseline.apk"
+          ./gradlew --no-daemon :app:assembleRelease
+          mv app/build/outputs/apk/release/app-release.apk "$RUNNER_TEMP/tower-apks/NEXVARY-Tower-Guard.apk"
+      - name: Verify package, version codes and signing identity
+        id: verify
+        shell: bash
+        env:
+          EXPECTED_CERT: ${{ vars.TOWER_RELEASE_CERT_SHA256 }}
+          LAST_DISTRIBUTED_VERSION: ${{ vars.TOWER_LAST_RELEASE_VERSION_CODE }}
+        run: |
+          set -euo pipefail
+          [[ "$EXPECTED_CERT" =~ ^[0-9a-fA-F]{64}$ ]]
+          [[ "$LAST_DISTRIBUTED_VERSION" =~ ^(0|[1-9][0-9]{0,9})$ ]]
+          tools="$ANDROID_HOME/build-tools/35.0.0"
+          cd "$RUNNER_TEMP/tower-apks"
+          for apk in baseline.apk NEXVARY-Tower-Guard.apk; do
+            "$tools/apksigner" verify --verbose --print-certs --Werr "$apk" > "$apk.signature.txt"
+            grep -Fx 'Number of signers: 1' "$apk.signature.txt"
+            grep -Fxi "Signer #1 certificate SHA-256 digest: $EXPECTED_CERT" "$apk.signature.txt"
+            [[ "$("$tools/aapt" dump badging "$apk" | sed -n "s/^package: name='\([^']*\)'.*/\1/p")" == com.nexvary.imsi ]]
+          done
+          "$tools/aapt" dump badging NEXVARY-Tower-Guard.apk > release-badging.txt
+          grep -Fx "application-label:'NEXVARY Tower Guard'" release-badging.txt
+          grep -Fx "application-label-ar:'NEXVARY Tower Guard'" release-badging.txt
+          baseline=$("$tools/aapt" dump badging baseline.apk | sed -n "s/^package: .*versionCode='\([0-9]*\)'.*/\1/p")
+          version=$("$tools/aapt" dump badging NEXVARY-Tower-Guard.apk | sed -n "s/^package: .*versionCode='\([0-9]*\)'.*/\1/p")
+          [[ "$baseline" =~ ^[0-9]+$ && "$version" =~ ^[0-9]+$ ]]
+          (( version == baseline + 1 && version > LAST_DISTRIBUTED_VERSION ))
+          printf 'version=%s\n' "$version" >> "$GITHUB_OUTPUT"
+          sha256sum NEXVARY-Tower-Guard.apk > NEXVARY-Tower-Guard.apk.sha256
+          sha256sum --check NEXVARY-Tower-Guard.apk.sha256
+          stat --format='%s' NEXVARY-Tower-Guard.apk > NEXVARY-Tower-Guard.apk.size-bytes.txt
+          "$tools/aapt" dump permissions NEXVARY-Tower-Guard.apk > release-permissions.txt
+          if grep -Fq "android.permission.INTERNET" release-permissions.txt; then
+            echo 'Unexpected INTERNET permission in release APK' >&2
+            exit 1
+          fi
+      - name: Enable emulator acceleration
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: reactivecircus/android-emulator-runner@v2
+        env:
+          RELEASE_VERSION: ${{ steps.verify.outputs.version }}
+        with:
+          api-level: 35
+          arch: x86_64
+          target: google_apis
+          script: bash scripts/verify-release-upgrade.sh "$RUNNER_TEMP/tower-apks"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: NEXVARY-Tower-Guard-release-vc${{ steps.verify.outputs.version }}
+          path: |
+            ${{ runner.temp }}/tower-apks/NEXVARY-Tower-Guard.apk
+            ${{ runner.temp }}/tower-apks/NEXVARY-Tower-Guard.apk.sha256
+            ${{ runner.temp }}/tower-apks/NEXVARY-Tower-Guard.apk.signature.txt
+            ${{ runner.temp }}/tower-apks/NEXVARY-Tower-Guard.apk.size-bytes.txt
+            ${{ runner.temp }}/tower-apks/release-badging.txt
+            ${{ runner.temp }}/tower-apks/release-permissions.txt
+            ${{ runner.temp }}/tower-apks/before.txt
+            ${{ runner.temp }}/tower-apks/after.txt
+            ${{ runner.temp }}/tower-apks/installation-verification.txt
+          if-no-files-found: error

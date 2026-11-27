@@ -67,9 +67,9 @@ public class MoreActivity extends Activity {
         // ---- INFORMATION section ----
         addSectionLabel(page, ar ? "\u0645\u0639\u0644\u0648\u0645\u0627\u062a" : "INFORMATION");
 
-        // About Nexvary Inc.
+        // Company contact
         addCardRow(page, R.drawable.ic_more_about,
-                ar ? "\u0639\u0646 Nexvary Inc." : "About Nexvary Inc.",
+                ar ? "\u062a\u0648\u0627\u0635\u0644 \u0645\u0639 Nexvary Inc." : "Contact Nexvary Inc.",
                 () -> startActivity(new Intent(this, AboutNexvaryActivity.class)));
 
         page.addView(UiKit.gap(this, 8));

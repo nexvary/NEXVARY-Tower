@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.*;
 import android.widget.*;
 
-/** About Nexvary Inc. - premium bilingual company profile. TG07/TG08. Owner-approved 2026-11-27. */
+/** Bilingual Nexvary Inc. contact page. TG07/TG08. */
 public class AboutNexvaryActivity extends Activity {
 
     @Override public void onCreate(Bundle b) {
@@ -52,7 +52,7 @@ public class AboutNexvaryActivity extends Activity {
         info.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
 
         TextView nameView = new TextView(this);
-        nameView.setText("NEXVARY INC.");
+        nameView.setText(ar ? "\u062a\u0648\u0627\u0635\u0644 \u0645\u0639 Nexvary Inc." : "Contact Nexvary Inc.");
         nameView.setTextColor(Color.WHITE);
         nameView.setTextSize(18f);
         nameView.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
@@ -65,48 +65,6 @@ public class AboutNexvaryActivity extends Activity {
         info.addView(tag);
         header.addView(info);
         page.addView(header);
-
-        // Description card with Arabic + English
-        page.addView(UiKit.eyebrow(this, ar ? "\u0639\u0646 \u0627\u0644\u0634\u0631\u0643\u0629" : "ABOUT THE COMPANY"));
-        page.addView(UiKit.gap(this, 8));
-
-        LinearLayout descCard = new LinearLayout(this);
-        descCard.setOrientation(LinearLayout.VERTICAL);
-        descCard.setBackgroundResource(R.drawable.panel);
-        int dp16 = UiKit.dp(this, 16);
-        descCard.setPadding(dp16, dp16, dp16, dp16);
-        LinearLayout.LayoutParams dclp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        dclp.bottomMargin = UiKit.dp(this, 16);
-        descCard.setLayoutParams(dclp);
-
-        // Owner-approved Arabic description (verbatim)
-        TextView arDesc = new TextView(this);
-        arDesc.setText("\u0634\u0631\u0643\u0629 \u062a\u0643\u0646\u0648\u0644\u0648\u062c\u064a\u0629 \u0645\u062a\u062e\u0635\u0635\u0629 \u0641\u064a \u062a\u0637\u0648\u064a\u0631 \u0627\u0644\u0628\u0631\u0645\u062c\u064a\u0627\u062a \u0627\u0644\u062f\u0641\u0627\u0639\u064a\u0629\u060c \u0648\u0627\u0644\u0623\u0645\u0646 \u0627\u0644\u0631\u0642\u0645\u064a\u060c \u0648\u0627\u0644\u0628\u062d\u062b \u0627\u0644\u0639\u0644\u0645\u064a\u060c \u0648\u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a\u060c \u0648\u062a\u0642\u0646\u064a\u0627\u062a \u062a\u062d\u0644\u064a\u0644 \u0627\u0644\u0628\u064a\u0627\u0646\u0627\u062a.\n\n\u062a\u0639\u0645\u0644 \u0627\u0644\u0634\u0631\u0643\u0629 \u0639\u0644\u0649 \u062a\u0637\u0648\u064a\u0631 \u062d\u0644\u0648\u0644 \u062a\u0642\u0646\u064a\u0629 \u0645\u0628\u062a\u0643\u0631\u0629 \u0644\u062a\u0639\u0632\u064a\u0632 \u0627\u0644\u0623\u0645\u0646 \u0648\u0627\u0644\u062e\u0635\u0648\u0635\u064a\u0629 \u0648\u0627\u0644\u0648\u0639\u064a \u0628\u0627\u0644\u0645\u062e\u0627\u0637\u0631 \u0627\u0644\u0631\u0642\u0645\u064a\u0629\u060c \u0648\u062f\u0639\u0645 \u0627\u0644\u0628\u062d\u062b \u0648\u0627\u0644\u062a\u0637\u0648\u064a\u0631 \u0641\u064a \u0645\u062c\u0627\u0644\u0627\u062a \u0627\u0644\u062a\u0643\u0646\u0648\u0644\u0648\u062c\u064a\u0627 \u0627\u0644\u0645\u062a\u0642\u062f\u0645\u0629.");
-        arDesc.setTextColor(Color.rgb(192, 192, 192));
-        arDesc.setTextSize(14f);
-        arDesc.setTextDirection(View.TEXT_DIRECTION_RTL);
-        arDesc.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
-        arDesc.setLineSpacing(0, 1.5f);
-        descCard.addView(arDesc);
-
-        View divider = new View(this);
-        divider.setBackgroundColor(Color.rgb(30, 30, 30));
-        LinearLayout.LayoutParams divlp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, 1);
-        divlp.topMargin = UiKit.dp(this, 12);
-        divlp.bottomMargin = UiKit.dp(this, 12);
-        divider.setLayoutParams(divlp);
-        descCard.addView(divider);
-
-        // English description
-        TextView enDesc = new TextView(this);
-        enDesc.setText("Nexvary Inc. is a technology company specializing in defensive software development, digital security, scientific research, artificial intelligence, and data analytics.\n\nThe company develops innovative technological solutions to enhance security, privacy, and awareness of digital risks, while supporting research and development in advanced technology.");
-        enDesc.setTextColor(Color.rgb(168, 183, 201));
-        enDesc.setTextSize(14f);
-        enDesc.setLineSpacing(0, 1.5f);
-        descCard.addView(enDesc);
-        page.addView(descCard);
 
         // Contact links section
         page.addView(UiKit.eyebrow(this, ar ? "\u062a\u0648\u0627\u0635\u0644 \u0645\u0639\u0646\u0627" : "CONTACT & LINKS"));

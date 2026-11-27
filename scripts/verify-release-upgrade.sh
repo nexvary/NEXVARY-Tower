@@ -7,7 +7,10 @@ package=com.nexvary.imsi
 launcher="$package/.OnboardingActivity"
 prefs="/data/user/0/$package/shared_prefs/nexvary_ui.xml"
 
-[[ $(adb shell getprop ro.kernel.qemu) == 1 ]]
+if [[ $(adb shell getprop ro.kernel.qemu) != 1 && $(adb shell getprop ro.boot.qemu) != 1 ]]; then
+    echo 'This procedure requires an isolated Android emulator.' >&2
+    exit 1
+fi
 [[ $(adb shell getprop ro.build.version.sdk) == 35 ]]
 [[ -z $(adb shell pm path "$package") ]]
 
@@ -90,3 +93,4 @@ grep -F 'android.permission.READ_PHONE_STATE: granted=true' before.txt
 grep -F 'android.permission.READ_PHONE_STATE: granted=true' after.txt
 sha256sum --check NEXVARY-Tower-Guard.apk.sha256
 printf 'Android 15 emulator: same-key QA APK upgraded in place, onboarding preference and phone permission retained, dashboard launched.\n' >> installation-verification.txt
+cat installation-verification.txt

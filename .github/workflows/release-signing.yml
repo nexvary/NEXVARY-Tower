@@ -26,6 +26,46 @@ jobs:
       - uses: gradle/actions/wrapper-validation@v4
       - name: Verify Release lint and regression tests
         run: ./gradlew --no-daemon :app:lintRelease :app:testReleaseUnitTest
+      - name: Build isolated QA APKs with a disposable CI key
+        if: github.ref == 'refs/heads/feature/tower-guard-production-release'
+        id: preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          sdkmanager 'build-tools;35.0.0'
+          umask 077
+          keydir="$(mktemp -d "$RUNNER_TEMP/tower-qa-key.XXXXXX")"
+          trap 'rm -rf -- "$keydir"' EXIT
+          export TOWER_KEYSTORE_PATH="$keydir/qa.p12"
+          export TOWER_KEY_ALIAS=ci-emulator-only
+          export TOWER_STORE_PASSWORD="$(openssl rand -hex 24)"
+          export TOWER_KEY_PASSWORD="$TOWER_STORE_PASSWORD"
+          keytool -genkeypair -storetype PKCS12 -keystore "$TOWER_KEYSTORE_PATH" \
+            -alias "$TOWER_KEY_ALIAS" -dname 'CN=Tower Guard Disposable Emulator QA' \
+            -keyalg RSA -keysize 2048 -validity 1 -storepass:env TOWER_STORE_PASSWORD
+          bash scripts/build-release-pair.sh "$RUNNER_TEMP/tower-apks"
+          cd "$RUNNER_TEMP/tower-apks"
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --Werr NEXVARY-Tower-Guard.apk
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging NEXVARY-Tower-Guard.apk > release-badging.txt
+          version=$(sed -n "s/^package: .*versionCode='\([0-9]*\)'.*/\1/p" release-badging.txt)
+          [[ "$version" =~ ^[0-9]+$ ]]
+          printf 'version=%s\n' "$version" >> "$GITHUB_OUTPUT"
+          sha256sum NEXVARY-Tower-Guard.apk > NEXVARY-Tower-Guard.apk.sha256
+      - name: Enable emulator acceleration
+        if: steps.preflight.outcome == 'success'
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: reactivecircus/android-emulator-runner@v2
+        if: steps.preflight.outcome == 'success'
+        env:
+          RELEASE_VERSION: ${{ steps.preflight.outputs.version }}
+        with:
+          api-level: 35
+          arch: x86_64
+          target: google_apis
+          script: bash scripts/verify-release-upgrade.sh "$RUNNER_TEMP/tower-apks"
 
   sign:
     if: github.ref == 'refs/heads/release/tower-guard-signed'
@@ -62,11 +102,7 @@ jobs:
           trap 'rm -f -- "$TOWER_KEYSTORE_PATH"' EXIT
           printf '%s' "$TOWER_KEYSTORE_BASE64" | base64 --decode > "$TOWER_KEYSTORE_PATH"
           unset TOWER_KEYSTORE_BASE64
-          mkdir -p "$RUNNER_TEMP/tower-apks"
-          ./gradlew --no-daemon :app:assembleRelease -PtowerUpgradeBaseline
-          mv app/build/outputs/apk/release/app-release.apk "$RUNNER_TEMP/tower-apks/baseline.apk"
-          ./gradlew --no-daemon :app:assembleRelease
-          mv app/build/outputs/apk/release/app-release.apk "$RUNNER_TEMP/tower-apks/NEXVARY-Tower-Guard.apk"
+          bash scripts/build-release-pair.sh "$RUNNER_TEMP/tower-apks"
       - name: Verify package, version codes and signing identity
         id: verify
         shell: bash

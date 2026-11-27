@@ -121,6 +121,6 @@ versionCode 7 / versionName 0.7.0
 
 ### Production release preparation
 
-- Reconciled PR #4 signing with the owner-approved PR #3 commit `4e5e81947a4c3f95a78cb284bf26e2db705a5fe8`. Source, resources, contact intents and existing tests come from the approved commit.
+- Reconciled PR #4 signing with the owner-approved PR #3 commit `4e5e81947a4c3f95a78cb284bf26e2db705a5fe8`. Source, resources, contact intents and existing tests come from the approved commit. Release resource compilation required correcting the logo extension from PNG to JPEG. Its bytes and Android resource name are identical.
 - Release candidate is 0.7.0, versionCode 9, with package `com.nexvary.imsi`. The signing gate requires the owner-confirmed distribution maximum and the recorded certificate fingerprint.
 - Release CI runs lint and unit regression tests without signing credentials. The protected release job verifies the signed APK and performs fresh installation and same-key upgrade with retained onboarding data on an isolated Android 15 emulator. Signing and runtime acceptance are pending owner key availability.

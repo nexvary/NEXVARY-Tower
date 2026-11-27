@@ -20,7 +20,7 @@ public class SecurityAwarenessActivity extends Activity {
         SecureScreenUtil.apply(this);
 
         ScrollView scroll = new ScrollView(this);
-        scroll.setBackgroundColor(Color.rgb(2, 7, 13));
+        scroll.setBackgroundColor(Color.BLACK);
         scroll.setClipToPadding(false);
 
         LinearLayout page = UiKit.page(this);
@@ -48,8 +48,8 @@ public class SecurityAwarenessActivity extends Activity {
             : "A comprehensive offline guide to cellular networks, interception technology, and how Tower Guard works."));
         page.addView(UiKit.gap(this, 20));
 
-        addSection(page, "A", 0xFF1597FF,
-            ar ? "\u0623 \u2014 \u0623\u0633\u0627\u0633\u064a\u0627\u062a \u0627\u0644\u0634\u0628\u0643\u0627\u062a \u0627\u0644\u062e\u0644\u0648\u064a\u0629" : "A \u2014 Cellular Network Fundamentals",
+        addSection(page, R.drawable.ic_skc_cellular,
+            ar ? "\u0623\u0633\u0627\u0633\u064a\u0627\u062a \u0627\u0644\u0634\u0628\u0643\u0627\u062a \u0627\u0644\u062e\u0644\u0648\u064a\u0629" : "Cellular Network Fundamentals",
             new String[][]{
                 {ar ? "\u0643\u064a\u0641 \u062a\u062a\u0648\u0627\u0635\u0644 \u0627\u0644\u0647\u0648\u0627\u062a\u0641 \u0645\u0639 \u0627\u0644\u0623\u0628\u0631\u0627\u062c" : "How phones communicate with towers",
                  ar ? "\u064a\u062a\u0648\u0627\u0635\u0644 \u0647\u0627\u062a\u0641\u0643 \u0645\u0639 \u0627\u0644\u0634\u0628\u0643\u0629 \u0639\u0628\u0631 \u0645\u062d\u0637\u0627\u062a \u0627\u0644\u0642\u0627\u0639\u062f\u0629 (eNodeB \u0641\u064a 4G\u060c gNodeB \u0641\u064a 5G). \u064a\u0646\u0636\u0645 \u0627\u0644\u0647\u0627\u062a\u0641 \u0625\u0644\u0649 \u0627\u0644\u062e\u0644\u064a\u0629 \u0630\u0627\u062a \u0623\u0642\u0648\u0649 \u0625\u0634\u0627\u0631\u0629. \u064a\u064f\u062e\u0635\u0651\u0635 \u0644\u0643\u0644 \u0627\u062a\u0635\u0627\u0644 TMSI \u0628\u062f\u0644\u0627\u064b \u0645\u0646 IMSI.\n\n\u0641\u064a 4G/5G\u060c \u0627\u0644\u0645\u0635\u0627\u062f\u0642\u0629 \u0645\u062a\u0628\u0627\u062f\u0644\u0629 \u2014 \u062e\u0627\u0635\u064a\u0629 \u063a\u0627\u0626\u0628\u0629 \u0641\u064a 2G."
@@ -68,8 +68,8 @@ public class SecurityAwarenessActivity extends Activity {
                     : "RSRP: reference signal received power (dBm), range \u2212140 to \u221244.\nRSRQ: signal quality ratio (dB), good above \u221210.\nRSSI: total wideband power including interference.\nSINR: signal-to-interference+noise ratio (dB), higher is better.\nNo single measurement value definitively indicates an IMSI catcher."}
             });
 
-        addSection(page, "B", 0xFFFFB53F,
-            ar ? "\u0628 \u2014 \u062a\u0642\u0646\u064a\u0627\u062a \u0627\u0644\u0627\u0639\u062a\u0631\u0627\u0636 \u0627\u0644\u062e\u0644\u0648\u064a" : "B \u2014 Cellular Interception Technologies",
+        addSection(page, R.drawable.ic_skc_interception,
+            ar ? "\u062a\u0642\u0646\u064a\u0627\u062a \u0627\u0644\u0627\u0639\u062a\u0631\u0627\u0636 \u0627\u0644\u062e\u0644\u0648\u064a" : "Cellular Interception Technologies",
             new String[][]{
                 {ar ? "\u0623\u062c\u0647\u0632\u0629 IMSI Catcher" : "IMSI catchers and cell-site simulators",
                  ar ? "IMSI Catcher \u0647\u0648 \u0628\u0631\u062c \u062e\u0644\u0648\u064a \u0645\u0632\u064a\u0641 \u064a\u0633\u062a\u063a\u0644 \u0628\u0631\u0648\u062a\u0648\u0643\u0648\u0644\u0627\u062a \u0627\u0644\u0634\u0628\u0643\u0629 \u0644\u0625\u062c\u0628\u0627\u0631 \u0627\u0644\u0647\u0648\u0627\u062a\u0641 \u0639\u0644\u0649 \u0627\u0644\u0627\u062a\u0635\u0627\u0644 \u0628\u0647 \u0628\u062f\u0644\u0627\u064b \u0645\u0646 \u0627\u0644\u0634\u0628\u0643\u0629 \u0627\u0644\u062d\u0642\u064a\u0642\u064a\u0629.\n\n\u062a\u0646\u0628\u064a\u0647: \u0627\u0644\u0645\u0624\u0634\u0631\u0627\u062a \u0627\u062d\u062a\u0645\u0627\u0644\u064a\u0629. \u0644\u0627 \u064a\u062b\u0628\u062a \u0623\u064a \u062a\u0646\u0628\u064a\u0647 \u0648\u062c\u0648\u062f \u0645\u062b\u0644 \u0647\u0630\u0647 \u0627\u0644\u0623\u062c\u0647\u0632\u0629."
@@ -88,8 +88,8 @@ public class SecurityAwarenessActivity extends Activity {
                     : "Cellular interception targets the radio link. E2E encryption protects content even if the network is compromised.\nDevice-level spyware bypasses the network layer entirely, reading data from application memory. No network-layer protection addresses this. Tower Guard monitors network indicators only."}
             });
 
-        addSection(page, "C", 0xFF55F08A,
-            ar ? "\u062c \u2014 \u0643\u064a\u0641 \u064a\u0639\u0645\u0644 Tower Guard" : "C \u2014 How Tower Guard Works",
+        addSection(page, R.drawable.ic_skc_towerguard,
+            ar ? "\u0643\u064a\u0641 \u064a\u0639\u0645\u0644 Tower Guard" : "How Tower Guard Works",
             new String[][]{
                 {ar ? "\u0645\u0631\u0627\u0642\u0628\u0629 \u062a\u063a\u064a\u064a\u0631 \u0627\u0644\u062e\u0644\u064a\u0629 \u0627\u0644\u062e\u0627\u062f\u0645\u0629" : "Cell change monitoring",
                  ar ? "\u064a\u0633\u062c\u0651\u0644 \u0641\u064a \u0643\u0644 \u0641\u062d\u0635: \u0645\u0639\u0631\u0651\u0641 \u0627\u0644\u062e\u0644\u064a\u0629 (Cell ID)\u060c \u062c\u064a\u0644 \u0627\u0644\u0634\u0628\u0643\u0629\u060c \u0627\u0644\u0645\u0634\u063a\u0651\u0644. \u062a\u063a\u064a\u064a\u0631 \u0645\u062a\u0643\u0631\u0631 \u0641\u064a \u0645\u0648\u0642\u0639 \u062b\u0627\u0628\u062a \u0623\u0648 \u0645\u0635\u062d\u0648\u0628 \u0628\u062a\u0631\u0627\u062c\u0639 \u062c\u064a\u0644 + \u0634\u0630\u0648\u0630 \u0625\u0634\u0627\u0631\u0629 \u064a\u0631\u0641\u0639 \u0627\u0644\u062f\u0631\u062c\u0629."
@@ -108,8 +108,8 @@ public class SecurityAwarenessActivity extends Activity {
                     : "Each scan stored encrypted (AES-GCM + Android Keystore). Max 180 scans. PDF export available from Reports screen. No INTERNET permission used or needed."}
             });
 
-        addSection(page, "D", 0xFFFF2448,
-            ar ? "\u062f \u2014 \u0641\u0647\u0645 \u0627\u0644\u062a\u0646\u0628\u064a\u0647\u0627\u062a \u0627\u0644\u0623\u0645\u0646\u064a\u0629" : "D \u2014 Understanding Security Alerts",
+        addSection(page, R.drawable.ic_skc_alerts,
+            ar ? "\u0641\u0647\u0645 \u0627\u0644\u062a\u0646\u0628\u064a\u0647\u0627\u062a \u0627\u0644\u0623\u0645\u0646\u064a\u0629" : "Understanding Security Alerts",
             new String[][]{
                 {ar ? "\u0633\u0644\u0648\u0643 \u0637\u0628\u064a\u0639\u064a \u0645\u0642\u0627\u0628\u0644 \u0623\u0646\u0645\u0627\u0637 \u0645\u0634\u0628\u0648\u0647\u0629" : "Normal vs. suspicious patterns",
                  ar ? "\u0637\u0628\u064a\u0639\u064a: \u062a\u063a\u064a\u064a\u0631 \u062e\u0644\u064a\u0629 \u0639\u0646\u062f \u0627\u0644\u062a\u0646\u0642\u0644 \u2022 \u062a\u0631\u0627\u062c\u0639 \u0641\u064a \u0645\u0646\u0627\u0637\u0642 \u0636\u0639\u064a\u0641\u0629 \u2022 \u062a\u0642\u0644\u0628\u0627\u062a RSRP \u062f\u0627\u062e\u0644 \u0645\u0628\u0627\u0646\u064a.\n\u062c\u062f\u064a\u0631 \u0628\u0627\u0644\u0645\u0631\u0627\u062c\u0639\u0629: \u062a\u063a\u064a\u064a\u0631 \u0645\u062a\u0643\u0631\u0631 \u0641\u064a \u0645\u0648\u0642\u0639 \u062b\u0627\u0628\u062a \u2022 \u062a\u0631\u0627\u062c\u0639 2G + \u062a\u063a\u064a\u064a\u0631 \u062e\u0644\u064a\u0629 + \u0634\u0630\u0648\u0630 \u0625\u0634\u0627\u0631\u0629 \u2022 \u0627\u062e\u062a\u0641\u0627\u0621 \u062c\u0645\u064a\u0639 \u0627\u0644\u062c\u064a\u0631\u0627\u0646 \u2022 \u062a\u063a\u064a\u064a\u0631 \u0627\u0644\u0645\u0634\u063a\u0651\u0644."
@@ -122,8 +122,8 @@ public class SecurityAwarenessActivity extends Activity {
                     : "Tower Guard cannot:\n\u2022 Prove conclusively that an IMSI catcher is present.\n\u2022 Detect device-level spyware.\n\u2022 Detect passive radio monitoring.\n\u2022 Determine location of any suspicious device.\nThis application is an awareness tool, not a definitive detection system."}
             });
 
-        addSection(page, "E", 0xFF72C8FF,
-            ar ? "\u0647\u0640 \u2014 \u062d\u0645\u0627\u064a\u0629 \u0627\u0644\u0645\u0633\u062a\u062e\u062f\u0645" : "E \u2014 User Protection",
+        addSection(page, R.drawable.ic_skc_protection,
+            ar ? "\u0647\u0640 \u2014 \u062d\u0645\u0627\u064a\u0629 \u0627\u0644\u0645\u0633\u062a\u062e\u062f\u0645" : "User Protection",
             new String[][]{
                 {ar ? "\u062d\u0627\u0641\u0638 \u0639\u0644\u0649 \u062a\u062d\u062f\u064a\u062b Android" : "Keep Android updated",
                  ar ? "\u062a\u062d\u062f\u064a\u062b\u0627\u062a \u0623\u0645\u0646\u064a\u0629 \u0634\u0647\u0631\u064a\u0629 \u062a\u064f\u0635\u062d\u0651\u062d \u062b\u063a\u0631\u0627\u062a \u0641\u064a \u0637\u0628\u0642\u0629 \u0627\u0644\u0627\u062a\u0635\u0627\u0644\u0627\u062a. \u062a\u0623\u062e\u0631 \u0627\u0644\u062a\u062d\u062f\u064a\u062b \u064a\u064f\u0628\u0642\u064a \u0627\u0644\u062c\u0647\u0627\u0632 \u0639\u0631\u0636\u0629 \u0644\u062b\u063a\u0631\u0627\u062a \u0645\u0639\u0644\u0646\u0629."
@@ -145,8 +145,8 @@ public class SecurityAwarenessActivity extends Activity {
                     : "If anomalous patterns persist and cannot be explained, contact your mobile operator. They have access to real network-side data and can verify service status and tower configuration."}
             });
 
-        addSection(page, "F", 0xFFB88AFF,
-            ar ? "\u0648 \u2014 \u0645\u0631\u0627\u062c\u0639 \u0639\u0644\u0645\u064a\u0629 \u0648\u062a\u0642\u0646\u064a\u0629" : "F \u2014 Scientific and Technical References",
+        addSection(page, R.drawable.ic_skc_references,
+            ar ? "\u0645\u0631\u0627\u062c\u0639 \u0639\u0644\u0645\u064a\u0629 \u0648\u062a\u0642\u0646\u064a\u0629" : "Scientific and Technical References",
             new String[][]{
                 {ar ? "\u0645\u0639\u0627\u064a\u064a\u0631 3GPP" : "3GPP Standards",
                  ar ? "3GPP: \u0647\u064a\u0626\u0629 \u0645\u0639\u0627\u064a\u064a\u0631 LTE \u0648 NR \u0627\u0644\u062f\u0648\u0644\u064a\u0629.\n\u2022 TS 36.211: \u0642\u0646\u0648\u0627\u062a LTE \u0627\u0644\u0641\u064a\u0632\u064a\u0627\u0626\u064a\u0629.\n\u2022 TS 38.211: \u0642\u0646\u0648\u0627\u062a 5G NR.\n\u2022 TS 33.401: \u0623\u0645\u0627\u0646 LTE-EPC.\n\u2022 TS 33.501: \u0623\u0645\u0627\u0646 5G.\n\u0645\u062a\u0627\u062d\u0629 \u0645\u062c\u0627\u0646\u0627\u064b \u0639\u0644\u0649 3gpp.org."
@@ -169,7 +169,7 @@ public class SecurityAwarenessActivity extends Activity {
         page.addView(UiKit.gap(this, 12));
     }
 
-    private void addSection(LinearLayout page, String badge, int badgeColor,
+    private void addSection(LinearLayout page, int iconRes,
                             String title, String[][] articles) {
         LinearLayout header = new LinearLayout(this);
         header.setOrientation(LinearLayout.HORIZONTAL);
@@ -178,17 +178,12 @@ public class SecurityAwarenessActivity extends Activity {
         header.setPadding(hp, hp, hp, hp);
         header.setBackgroundResource(R.drawable.panel);
 
-        TextView badgeView = new TextView(this);
-        badgeView.setText(badge);
-        badgeView.setTextColor(badgeColor);
-        badgeView.setTextSize(13f);
-        badgeView.setTypeface(null, Typeface.BOLD);
-        badgeView.setGravity(android.view.Gravity.CENTER);
         int bSize = UiKit.dp(this, 32);
+        ImageView badgeView = new ImageView(this);
+        badgeView.setImageResource(iconRes);
         LinearLayout.LayoutParams blp = new LinearLayout.LayoutParams(bSize, bSize);
         blp.rightMargin = UiKit.dp(this, 10);
         badgeView.setLayoutParams(blp);
-        badgeView.setBackgroundColor(badgeColor & 0x22FFFFFF);
         header.addView(badgeView);
 
         TextView titleView = new TextView(this);
@@ -199,11 +194,10 @@ public class SecurityAwarenessActivity extends Activity {
         titleView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
         header.addView(titleView);
 
-        TextView arrowView = new TextView(this);
-        arrowView.setText("\u25bc");
-        arrowView.setTextColor(Color.rgb(90, 120, 148));
-        arrowView.setTextSize(12f);
-        arrowView.setGravity(android.view.Gravity.CENTER);
+        int chevSize = UiKit.dp(this, 20);
+        ImageView arrowView = new ImageView(this);
+        arrowView.setImageResource(R.drawable.ic_chevron_down);
+        arrowView.setLayoutParams(new LinearLayout.LayoutParams(chevSize, chevSize));
         header.addView(arrowView);
 
         LinearLayout articleContainer = new LinearLayout(this);
@@ -211,27 +205,27 @@ public class SecurityAwarenessActivity extends Activity {
         articleContainer.setVisibility(View.GONE);
         int cp = UiKit.dp(this, 4);
         articleContainer.setPadding(cp, 0, cp, cp);
-        articleContainer.setBackgroundColor(Color.rgb(4, 11, 19));
+        articleContainer.setBackgroundColor(Color.rgb(6, 6, 6));
 
         for (String[] article : articles) {
-            addArticle(articleContainer, article[0], article[1], badgeColor);
+            addArticle(articleContainer, article[0], article[1]);
         }
 
         final boolean[] expanded = {false};
         header.setOnClickListener(v -> {
             expanded[0] = !expanded[0];
             articleContainer.setVisibility(expanded[0] ? View.VISIBLE : View.GONE);
-            arrowView.setText(expanded[0] ? "\u25b2" : "\u25bc");
+            arrowView.setRotation(expanded[0] ? 180f : 0f);
         });
         header.setClickable(true);
         header.setFocusable(true);
 
         page.addView(header);
         page.addView(articleContainer);
-        page.addView(UiKit.gap(this, 8));
+        page.addView(UiKit.gap(this, 6));
     }
 
-    private void addArticle(LinearLayout container, String articleTitle, String body, int accentColor) {
+    private void addArticle(LinearLayout container, String articleTitle, String body) {
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.HORIZONTAL);
         row.setGravity(android.view.Gravity.CENTER_VERTICAL);
@@ -239,42 +233,42 @@ public class SecurityAwarenessActivity extends Activity {
         row.setPadding(rp, UiKit.dp(this, 8), rp, UiKit.dp(this, 8));
 
         View dot = new View(this);
-        int dotSize = UiKit.dp(this, 6);
+        int dotSize = UiKit.dp(this, 5);
         LinearLayout.LayoutParams dlp = new LinearLayout.LayoutParams(dotSize, dotSize);
         dlp.topMargin = UiKit.dp(this, 4);
-        dlp.rightMargin = UiKit.dp(this, 10);
+        dlp.rightMargin = UiKit.dp(this, 8);
         dot.setLayoutParams(dlp);
-        dot.setBackgroundColor(accentColor);
+        dot.setBackgroundColor(Color.rgb(0, 176, 255));
         row.addView(dot);
 
         TextView titleView = new TextView(this);
         titleView.setText(articleTitle);
-        titleView.setTextColor(Color.rgb(200, 220, 240));
+        titleView.setTextColor(Color.rgb(210, 225, 240));
         titleView.setTextSize(13f);
         titleView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
         row.addView(titleView);
 
-        TextView chevron = new TextView(this);
-        chevron.setText("\u203a");
-        chevron.setTextColor(Color.rgb(90, 120, 148));
-        chevron.setTextSize(18f);
+        int cs = UiKit.dp(this, 18);
+        ImageView chevron = new ImageView(this);
+        chevron.setImageResource(R.drawable.ic_chevron_right);
+        chevron.setLayoutParams(new LinearLayout.LayoutParams(cs, cs));
         row.addView(chevron);
 
         TextView bodyView = new TextView(this);
         bodyView.setText(body);
-        bodyView.setTextColor(Color.rgb(140, 165, 190));
+        bodyView.setTextColor(Color.rgb(160, 180, 200));
         bodyView.setTextSize(13f);
         bodyView.setLineSpacing(0, 1.4f);
         int bp = UiKit.dp(this, 10);
-        bodyView.setPadding(bp + UiKit.dp(this, 16), 0, bp, UiKit.dp(this, 10));
+        bodyView.setPadding(bp + UiKit.dp(this, 13), UiKit.dp(this, 4), bp, UiKit.dp(this, 8));
         bodyView.setVisibility(View.GONE);
-        bodyView.setBackgroundColor(Color.rgb(3, 9, 16));
+        bodyView.setBackgroundColor(Color.rgb(4, 4, 4));
 
         final boolean[] open = {false};
         row.setOnClickListener(v -> {
             open[0] = !open[0];
             bodyView.setVisibility(open[0] ? View.VISIBLE : View.GONE);
-            chevron.setText(open[0] ? "\u2228" : "\u203a");
+            chevron.setRotation(open[0] ? 90f : 0f);
         });
         row.setClickable(true);
         row.setFocusable(true);
@@ -282,7 +276,7 @@ public class SecurityAwarenessActivity extends Activity {
         View separator = new View(this);
         separator.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, 1));
-        separator.setBackgroundColor(Color.rgb(10, 25, 40));
+        separator.setBackgroundColor(Color.rgb(18, 18, 18));
 
         container.addView(row);
         container.addView(bodyView);

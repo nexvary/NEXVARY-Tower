@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.*;
 import android.widget.*;
 
-/** More tab: settings, language, security center, about. TG06/TG08. */
+/** More tab: settings, language, security centre, about. TG06/TG08. */
 public class MoreActivity extends Activity {
 
     @Override public void onCreate(Bundle b) {
@@ -26,83 +26,152 @@ public class MoreActivity extends Activity {
     private void buildUi(LinearLayout page) {
         boolean ar = LanguageUtil.current(this).equals("ar");
 
-        page.addView(UiKit.eyebrow(this, ar ? "المزيد" : "MORE"));
-        page.addView(UiKit.title(this, ar ? "الإعدادات والخيارات" : "Settings & Options"));
-        page.addView(UiKit.gap(this, 16));
+        page.addView(UiKit.eyebrow(this, ar ? "\u0627\u0644\u0645\u0632\u064a\u062f" : "MORE"));
+        page.addView(UiKit.title(this, ar ? "\u0627\u0644\u0625\u0639\u062f\u0627\u062f\u0627\u062a \u0648\u0627\u0644\u062e\u064a\u0627\u0631\u0627\u062a" : "Settings & Options"));
+        page.addView(UiKit.gap(this, 10));
 
-        // Language toggle
-        Button lang = UiKit.button(this, ar ? "English / عربية" : "العربية / EN");
-        lang.setOnClickListener(v -> { LanguageUtil.toggle(this); recreate(); });
-        page.addView(lang);
+        // ---- SETTINGS section ----
+        addSectionLabel(page, ar ? "\u0627\u0644\u0625\u0639\u062f\u0627\u062f\u0627\u062a" : "SETTINGS");
 
-        // Privacy setting — screenshot prevention toggle
-        addScreenshotToggle(page, ar);
+        // Language toggle card
+        addCardRow(page, R.drawable.ic_more_language,
+                ar ? "English / \u0639\u0631\u0628\u064a\u0629" : "\u0627\u0644\u0639\u0631\u0628\u064a\u0629 / EN",
+                () -> { LanguageUtil.toggle(this); recreate(); });
+
+        // Screenshot prevention switch
+        addScreenshotSwitch(page, ar);
 
         // Trusted baselines
-        Button bases = UiKit.button(this, ar ? "خطوط الأساس الموثوقة" : "TRUSTED BASELINES");
-        bases.setOnClickListener(v -> startActivity(new Intent(this, BaselinesActivity.class)));
-        page.addView(bases);
+        addCardRow(page, R.drawable.ic_more_baselines,
+                ar ? "\u062e\u0637\u0648\u0637 \u0627\u0644\u0623\u0633\u0627\u0633 \u0627\u0644\u0645\u0648\u062b\u0648\u0642\u0629" : "Trusted Baselines",
+                () -> startActivity(new Intent(this, BaselinesActivity.class)));
+
+        page.addView(UiKit.gap(this, 12));
+
+        // ---- RESOURCES section ----
+        addSectionLabel(page, ar ? "\u0645\u0648\u0627\u0631\u062f" : "RESOURCES");
 
         // Privacy policy
-        Button privacy = UiKit.button(this, ar ? "سياسة الخصوصية" : "PRIVACY POLICY");
-        privacy.setOnClickListener(v -> startActivity(new Intent(this, PrivacyActivity.class)));
-        page.addView(privacy);
-
-        page.addView(UiKit.gap(this, 20));
-        page.addView(UiKit.eyebrow(this, ar ? "معرفة وتوعية" : "KNOWLEDGE & AWARENESS"));
-        page.addView(UiKit.gap(this, 8));
+        addCardRow(page, R.drawable.ic_more_privacy,
+                ar ? "\u0633\u064a\u0627\u0633\u0629 \u0627\u0644\u062e\u0635\u0648\u0635\u064a\u0629" : "Privacy Policy",
+                () -> startActivity(new Intent(this, PrivacyActivity.class)));
 
         // Security Knowledge Center
-        Button skc = UiKit.button(this, ar ? "مركز الوعي الأمني" : "SECURITY KNOWLEDGE CENTER");
-        skc.setOnClickListener(v -> startActivity(new Intent(this, SecurityAwarenessActivity.class)));
-        page.addView(skc);
+        addCardRow(page, R.drawable.ic_more_skc,
+                ar ? "\u0645\u0631\u0643\u0632 \u0627\u0644\u0648\u0639\u064a \u0627\u0644\u0623\u0645\u0646\u064a" : "Security Knowledge Center",
+                () -> startActivity(new Intent(this, SecurityAwarenessActivity.class)));
+
+        page.addView(UiKit.gap(this, 12));
+
+        // ---- INFORMATION section ----
+        addSectionLabel(page, ar ? "\u0645\u0639\u0644\u0648\u0645\u0627\u062a" : "INFORMATION");
+
+        // About Nexvary Inc.
+        addCardRow(page, R.drawable.ic_more_about,
+                ar ? "\u0639\u0646 Nexvary Inc." : "About Nexvary Inc.",
+                () -> startActivity(new Intent(this, AboutNexvaryActivity.class)));
 
         page.addView(UiKit.gap(this, 20));
-        page.addView(UiKit.eyebrow(this, ar ? "المعلومات" : "INFORMATION"));
-        page.addView(UiKit.gap(this, 8));
 
-        // About Nexvary Inc. (renamed from User Guide)
-        Button about = UiKit.button(this, ar ? "عن Nexvary Inc." : "About Nexvary Inc.");
-        about.setTextColor(Color.rgb(0, 176, 255));
-        about.setOnClickListener(v -> startActivity(new Intent(this, AboutNexvaryActivity.class)));
-        page.addView(about);
-
-        page.addView(UiKit.gap(this, 24));
         TextView footer = UiKit.body(this,
-            ar ? "لا يوجد إذن INTERNET. المراقبة في الواجهة فقط. المحتوى مشفر بـ AES-GCM."
-               : "No INTERNET permission. Monitoring foreground-only. History encrypted AES-GCM.");
+                ar ? "\u0644\u0627 \u064a\u0648\u062c\u062f \u0625\u0630\u0646 INTERNET. \u0627\u0644\u0645\u0631\u0627\u0642\u0628\u0629 \u0641\u064a \u0627\u0644\u0648\u0627\u062c\u0647\u0629 \u0641\u0642\u0637. \u0627\u0644\u0633\u062c\u0644 \u0645\u0634\u0641\u0651\u0631 AES-GCM."
+                   : "No INTERNET permission. Monitoring foreground-only. History encrypted AES-GCM.");
         footer.setTextColor(Color.rgb(55, 70, 85));
         footer.setTextSize(12f);
         page.addView(footer);
+        page.addView(UiKit.gap(this, 12));
     }
 
-    private void addScreenshotToggle(LinearLayout page, boolean ar) {
+    private void addSectionLabel(LinearLayout page, String text) {
+        TextView lbl = new TextView(this);
+        lbl.setText(text);
+        lbl.setTextColor(Color.rgb(90, 110, 130));
+        lbl.setTextSize(11f);
+        lbl.setTypeface(null, android.graphics.Typeface.BOLD);
+        lbl.setAllCaps(true);
+        int h = UiKit.dp(this, 4);
+        int v = UiKit.dp(this, 2);
+        lbl.setPadding(h, v, h, v);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, -2);
+        lp.bottomMargin = UiKit.dp(this, 4);
+        lbl.setLayoutParams(lp);
+        page.addView(lbl);
+    }
+
+    private void addCardRow(LinearLayout page, int iconRes, String label, Runnable action) {
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.HORIZONTAL);
         row.setGravity(Gravity.CENTER_VERTICAL);
         row.setBackgroundResource(R.drawable.panel);
-        int p = UiKit.dp(this, 14);
-        row.setPadding(p, p, p, p);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        lp.topMargin = UiKit.dp(this, 8);
+        int ph = UiKit.dp(this, 12);
+        int pv = UiKit.dp(this, 10);
+        row.setPadding(ph, pv, ph, pv);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, -2);
+        lp.topMargin = UiKit.dp(this, 4);
         row.setLayoutParams(lp);
+        row.setMinimumHeight(UiKit.dp(this, 48));
+
+        int s = UiKit.dp(this, 24);
+        ImageView icon = new ImageView(this);
+        icon.setImageResource(iconRes);
+        LinearLayout.LayoutParams ilp = new LinearLayout.LayoutParams(s, s);
+        ilp.rightMargin = UiKit.dp(this, 12);
+        icon.setLayoutParams(ilp);
+        row.addView(icon);
 
         TextView lbl = new TextView(this);
-        lbl.setText(ar ? "منع لقطات الشاشة" : "Prevent Screenshots");
+        lbl.setText(label);
         lbl.setTextColor(Color.rgb(192, 192, 192));
         lbl.setTextSize(14f);
-        lbl.setLayoutParams(new LinearLayout.LayoutParams(0,
-                LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+        lbl.setLayoutParams(new LinearLayout.LayoutParams(0, -2, 1f));
         row.addView(lbl);
 
-        CheckBox cb = new CheckBox(this);
-        cb.setChecked(SecureScreenUtil.isEnabled(this));
-        cb.setOnCheckedChangeListener((v, checked) -> {
+        ImageView chevron = new ImageView(this);
+        chevron.setImageResource(R.drawable.ic_chevron_right);
+        chevron.setLayoutParams(new LinearLayout.LayoutParams(UiKit.dp(this, 20), UiKit.dp(this, 20)));
+        row.addView(chevron);
+
+        row.setOnClickListener(v -> action.run());
+        row.setClickable(true);
+        row.setFocusable(true);
+        page.addView(row);
+    }
+
+    private void addScreenshotSwitch(LinearLayout page, boolean ar) {
+        LinearLayout row = new LinearLayout(this);
+        row.setOrientation(LinearLayout.HORIZONTAL);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        row.setBackgroundResource(R.drawable.panel);
+        int ph = UiKit.dp(this, 12);
+        int pv = UiKit.dp(this, 10);
+        row.setPadding(ph, pv, ph, pv);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, -2);
+        lp.topMargin = UiKit.dp(this, 4);
+        row.setLayoutParams(lp);
+        row.setMinimumHeight(UiKit.dp(this, 48));
+
+        int s = UiKit.dp(this, 24);
+        ImageView icon = new ImageView(this);
+        icon.setImageResource(R.drawable.ic_more_screenshot);
+        LinearLayout.LayoutParams ilp = new LinearLayout.LayoutParams(s, s);
+        ilp.rightMargin = UiKit.dp(this, 12);
+        icon.setLayoutParams(ilp);
+        row.addView(icon);
+
+        TextView lbl = new TextView(this);
+        lbl.setText(ar ? "\u0645\u0646\u0639 \u0644\u0642\u0637\u0627\u062a \u0627\u0644\u0634\u0627\u0634\u0629" : "Prevent Screenshots");
+        lbl.setTextColor(Color.rgb(192, 192, 192));
+        lbl.setTextSize(14f);
+        lbl.setLayoutParams(new LinearLayout.LayoutParams(0, -2, 1f));
+        row.addView(lbl);
+
+        Switch sw = new Switch(this);
+        sw.setChecked(SecureScreenUtil.isEnabled(this));
+        sw.setOnCheckedChangeListener((v, checked) -> {
             SecureScreenUtil.setEnabled(this, checked);
             SecureScreenUtil.apply(this);
         });
-        row.addView(cb);
+        row.addView(sw);
         page.addView(row);
     }
 }

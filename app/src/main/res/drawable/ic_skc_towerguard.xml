@@ -1,0 +1,25 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <!-- Shield — blue gradient fill -->
+    <path android:fillColor="#002244"
+        android:pathData="M12,1 L22,5 L22,13 Q22,20 12,23 Q2,20 2,13 L2,5 Z"/>
+    <!-- Shield border — blue -->
+    <path android:fillColor="@android:color/transparent"
+        android:strokeColor="#00B0FF" android:strokeWidth="1.5"
+        android:pathData="M12,1 L22,5 L22,13 Q22,20 12,23 Q2,20 2,13 L2,5 Z"/>
+    <!-- Radar sweep arc — green -->
+    <path android:fillColor="@android:color/transparent"
+        android:strokeColor="#00E676" android:strokeWidth="1.5"
+        android:pathData="M12,12 L12,6 A6,6 0 0,1 17.2,9 Z"/>
+    <!-- Radar circle — green -->
+    <path android:fillColor="@android:color/transparent"
+        android:strokeColor="#00E676" android:strokeWidth="1"
+        android:pathData="M6,12 A6,6 0 0,1 6,12.001 A6,6 0 1,1 6,12 Z"/>
+    <!-- Radar center dot — amber -->
+    <path android:fillColor="#FFB300"
+        android:pathData="M11.3,12 A0.7,0.7 0 1,0 11.3,12.001 A0.7,0.7 0 1,0 11.3,12 Z M12,11.3 A0.7,0.7 0 1,1 12,11.301 Z"/>
+    <!-- Radar blip — amber -->
+    <path android:fillColor="#FFB300"
+        android:pathData="M15,8.5 A1,1 0 1,0 15,8.501 A1,1 0 1,0 15,8.5 Z"/>
+</vector>

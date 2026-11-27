@@ -1,6 +1,6 @@
 # Tower Guard release signing
 
-The approved source is PR #3 at `4e5e81947a4c3f95a78cb284bf26e2db705a5fe8`. The package is `com.nexvary.imsi`. Version 0.7.0 keeps the approved in-app version text. The production candidate uses versionCode 9 and the approved Debug build uses 7.
+The approved source is PR #3 at `4e5e81947a4c3f95a78cb284bf26e2db705a5fe8`. The package is `com.nexvary.imsi`. Version 0.7.0 keeps the approved in-app version text. The production candidate uses versionCode 10 and the approved Debug build uses 7.
 
 ## Establish the signing identity
 

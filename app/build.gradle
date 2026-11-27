@@ -1,6 +1,6 @@
 plugins { id 'com.android.application' }
 
-def releaseVersionCode = 9
+def releaseVersionCode = 10
 def upgradeTest = providers.gradleProperty('towerUpgradeBaseline').isPresent()
 def signingInputs = [
     'TOWER_KEYSTORE_PATH', 'TOWER_STORE_PASSWORD', 'TOWER_KEY_ALIAS', 'TOWER_KEY_PASSWORD'

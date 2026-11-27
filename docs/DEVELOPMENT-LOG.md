@@ -122,6 +122,11 @@ versionCode 7 / versionName 0.7.0
 ### Production release preparation
 
 - Reconciled PR #4 signing with the owner-approved PR #3 commit `4e5e81947a4c3f95a78cb284bf26e2db705a5fe8`. Source, resources, contact intents and existing tests come from the approved commit. Release resource compilation required correcting the logo extension from PNG to JPEG. Its bytes and Android resource name are identical.
-- Release candidate is 0.7.0, versionCode 9, with package `com.nexvary.imsi`. The signing gate requires the owner-confirmed distribution maximum and the recorded certificate fingerprint.
+- Release candidate is 0.7.0, versionCode 10, with package `com.nexvary.imsi`. The signing gate requires the owner-confirmed distribution maximum and the recorded certificate fingerprint.
 - Release CI runs lint and unit regression tests without owner credentials. The review branch also runs the installation and upgrade preflight with a disposable CI key. The QA APKs stay on the runner. The protected release job verifies the signed APK and performs fresh installation and same-key upgrade with retained onboarding data on an isolated Android 15 emulator. Signing and runtime acceptance are pending owner key availability.
 - The three available previously shared APKs all have versionCode 7 and three distinct Android Debug certificate fingerprints. No hosted production signing environment was configured at review time. The owner must confirm distribution history outside the inspected APKs.
+
+### Signing recovery audit
+
+- Checked the six Tower branches, all four PRs, the full available commit history, artifacts, and repository signing metadata. The authenticated GitHub audit found no repository Actions secrets and no `tower-guard-release` environment. PR #4 configured the signing mechanism.
+- Read APK manifests and certificates with Android Build Tools. Older Debug artifacts include versionCode 9, including [artifact 15193484458](https://github.com/nexvary/NEXVARY-Tower/actions/runs/45991294434/artifacts/15193484458). The production candidate now uses versionCode 10. The approved app code, resources and on-screen version string are unchanged.

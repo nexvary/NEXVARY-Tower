@@ -2,6 +2,7 @@ package com.nexvary.imsi;
 
 import android.app.*;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.telephony.*;
 import android.view.*;
@@ -97,10 +98,30 @@ public class CellsActivity extends Activity {
         return "Unknown";
     }
 
+    private static CellIdentityNr nrIdentity(CellInfo cell) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && cell instanceof CellInfoNr) {
+            CellIdentity identity = ((CellInfoNr) cell).getCellIdentity();
+            if (identity instanceof CellIdentityNr) return (CellIdentityNr) identity;
+        }
+        return null;
+    }
+
+    private static CellSignalStrengthNr nrSignal(CellInfo cell) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && cell instanceof CellInfoNr) {
+            CellSignalStrength strength = ((CellInfoNr) cell).getCellSignalStrength();
+            if (strength instanceof CellSignalStrengthNr) return (CellSignalStrengthNr) strength;
+        }
+        return null;
+    }
+
     private String cellId(CellInfo ci) {
         try {
             if (ci instanceof CellInfoLte) return String.valueOf(((CellInfoLte) ci).getCellIdentity().getCi());
-            if (ci instanceof CellInfoNr) return String.valueOf(((CellInfoNr) ci).getCellIdentity().getNci());
+            CellIdentityNr nr = nrIdentity(ci);
+            if (nr != null) {
+                long nci = nr.getNci();
+                return nci == CellInfo.UNAVAILABLE_LONG ? "—" : Long.toString(nci);
+            }
             if (ci instanceof CellInfoWcdma) return String.valueOf(((CellInfoWcdma) ci).getCellIdentity().getCid());
             if (ci instanceof CellInfoGsm) return String.valueOf(((CellInfoGsm) ci).getCellIdentity().getCid());
         } catch (Exception ignored) {}
@@ -113,8 +134,9 @@ public class CellsActivity extends Activity {
                 int earfcn = ((CellInfoLte) ci).getCellIdentity().getEarfcn();
                 return earfcn != Integer.MAX_VALUE ? "EARFCN " + earfcn : "—";
             }
-            if (ci instanceof CellInfoNr) {
-                int arfcn = ((CellInfoNr) ci).getCellIdentity().getNrarfcn();
+            CellIdentityNr nr = nrIdentity(ci);
+            if (nr != null) {
+                int arfcn = nr.getNrarfcn();
                 return arfcn != Integer.MAX_VALUE ? "NR-ARFCN " + arfcn : "—";
             }
         } catch (Exception ignored) {}
@@ -127,8 +149,9 @@ public class CellsActivity extends Activity {
                 int dbm = ((CellInfoLte) ci).getCellSignalStrength().getRsrp();
                 return dbm != Integer.MAX_VALUE ? dbm + " dBm (RSRP)" : "N/A";
             }
-            if (ci instanceof CellInfoNr) {
-                int dbm = ((CellInfoNr) ci).getCellSignalStrength().getSsRsrp();
+            CellSignalStrengthNr nr = nrSignal(ci);
+            if (nr != null) {
+                int dbm = nr.getSsRsrp();
                 return dbm != Integer.MAX_VALUE ? dbm + " dBm (SS-RSRP)" : "N/A";
             }
             if (ci instanceof CellInfoWcdma) {
@@ -159,8 +182,9 @@ public class CellsActivity extends Activity {
                 int s = ((CellInfoLte) ci).getCellSignalStrength().getRssnr();
                 return s != Integer.MAX_VALUE ? s + " dB" : "N/A";
             }
-            if (ci instanceof CellInfoNr) {
-                int s = ((CellInfoNr) ci).getCellSignalStrength().getSsSinr();
+            CellSignalStrengthNr nr = nrSignal(ci);
+            if (nr != null) {
+                int s = nr.getSsSinr();
                 return s != Integer.MAX_VALUE ? s + " dB" : "N/A";
             }
         } catch (Exception ignored) {}

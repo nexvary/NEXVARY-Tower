@@ -1,0 +1,41 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+
+    <!-- Shield background — metallic dark -->
+    <path android:fillColor="#1A1A1A"
+        android:pathData="M54,15 L82,27 L82,52 C82,68 69,80 54,84 C39,80 26,68 26,52 L26,27 Z"/>
+
+    <!-- Shield border — metallic silver gradient effect -->
+    <path android:fillColor="#C0C0C0" android:fillAlpha="0.9"
+        android:pathData="M54,13 L84,26 L84,52 C84,69.5 70.5,82.5 54,86 C37.5,82.5 24,69.5 24,52 L24,26 Z
+                          M54,17 L28,28.5 L28,52 C28,67 40,78 54,82 C68,78 80,67 80,52 L80,28.5 Z"/>
+
+    <!-- Cellular tower mast — silver -->
+    <path android:fillColor="#D0D0D0"
+        android:pathData="M52,52 L56,52 L59,80 L49,80 Z"/>
+
+    <!-- Tower horizontal strut -->
+    <path android:fillColor="#D0D0D0"
+        android:pathData="M46,61 L62,61 L62,63 L46,63 Z"/>
+
+    <!-- Signal arc 1 — electric blue -->
+    <path android:fillColor="#00B0FF"
+        android:pathData="M44,46 A11,11 0,0,1 64,46 L61,49 A7.5,7.5 0,0,0 47,49 Z"/>
+
+    <!-- Signal arc 2 — neon green -->
+    <path android:fillColor="#00E676"
+        android:pathData="M38,40 A17,17 0,0,1 70,40 L66.5,43.5 A12,12 0,0,0 41.5,43.5 Z"/>
+
+    <!-- Signal arc 3 — violet hint -->
+    <path android:fillColor="#9D4EDD" android:fillAlpha="0.7"
+        android:pathData="M32,34 A23,23 0,0,1 76,34 L72,37.5 A17,17 0,0,0 36,37.5 Z"/>
+
+    <!-- Top antenna node — amber glow -->
+    <path android:fillColor="#FFB300"
+        android:pathData="M51.5,30 A3,3 0,1,1 56.5,30 A3,3 0,1,1 51.5,30 Z"/>
+
+    <!-- Antenna tip dot — white highlight -->
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M53.5,30 A1,1 0,1,1 54.5,30 A1,1 0,1,1 53.5,30 Z"/>
+</vector>

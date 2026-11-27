@@ -1,405 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rootScroll"
-    android:clipToPadding="false"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dashRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/bg"
-    android:fillViewport="true">
+    android:padding="12dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="18dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical">
-
-            <ImageView
-                android:layout_width="58dp"
-                android:layout_height="58dp"
-                android:src="@drawable/nexvary_logo"
-                android:scaleType="centerCrop"
-                android:contentDescription="NEXVARY" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:paddingStart="12dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="NEXVARY"
-                    android:textColor="@color/text"
-                    android:textStyle="bold"
-                    android:textSize="24sp"
-                    android:letterSpacing="0.08" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/version_label"
-                    android:textColor="@color/blue2"
-                    android:textSize="11sp"
-                    android:letterSpacing="0.08" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/privacyBadge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/offline"
-                android:textColor="@color/green"
-                android:textSize="10sp" />
+    <!-- Header row -->
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:gravity="center_vertical">
+        <ImageView android:layout_width="40dp" android:layout_height="40dp"
+            android:src="@drawable/nexvary_logo" android:scaleType="centerCrop"
+            android:contentDescription="NEXVARY" />
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:orientation="vertical" android:paddingStart="10dp">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="NEXVARY" android:textColor="@color/text"
+                android:textStyle="bold" android:textSize="17sp" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="TOWER GUARD" android:textColor="@color/blue2" android:textSize="9sp" />
         </LinearLayout>
-
-        <com.nexvary.imsi.RadarView
-            android:id="@+id/radar"
-            android:layout_width="match_parent"
-            android:layout_height="280dp"
-            android:layout_marginTop="16dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/panel"
-            android:padding="16dp"
-            android:layout_marginTop="12dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/cellular_risk_monitor"
-                android:textColor="@color/blue2"
-                android:textStyle="bold"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/riskTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/ready_scan"
-                android:textColor="@color/text"
-                android:textStyle="bold"
-                android:textSize="26sp"
-                android:layout_marginTop="6dp" />
-
-            <TextView
-                android:id="@+id/riskSummary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/scan_intro"
-                android:textColor="@color/muted"
-                android:textSize="14sp"
-                android:lineSpacingExtra="3dp"
-                android:layout_marginTop="6dp" />
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:orientation="vertical" android:gravity="end">
+            <TextView android:id="@+id/monitorStatusPill"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="@string/monitoring_off" android:textColor="@color/muted"
+                android:textSize="10sp" android:background="@drawable/panel"
+                android:paddingStart="8dp" android:paddingEnd="8dp"
+                android:paddingTop="3dp" android:paddingBottom="3dp" />
+            <TextView android:id="@+id/privacyBadge"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="@string/offline" android:textColor="@color/green"
+                android:textSize="9sp" android:layout_marginTop="2dp" />
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="12dp">
-
-            <Button
-                android:id="@+id/scanButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:minHeight="54dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_primary"
-                android:text="@string/scan_now"
-                android:textColor="@color/text"
-                android:textStyle="bold" />
-
-            <Space android:layout_width="10dp" android:layout_height="1dp" />
-
-            <Button
-                android:id="@+id/liveButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:minHeight="54dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_secondary"
-                android:text="@string/start_live"
-                android:textColor="@color/red"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/liveState"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/live_off"
-            android:textColor="@color/muted"
-            android:textSize="11sp"
-            android:layout_marginTop="6dp" />
-
-        <Button
-            android:id="@+id/baselineButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="54dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/button_secondary"
-            android:text="@string/add_baseline"
-            android:textColor="@color/blue2"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="8dp">
-            <Button android:id="@+id/historyButton" android:layout_width="0dp" android:layout_height="wrap_content" android:minHeight="52dp" android:paddingTop="9dp" android:paddingBottom="9dp" android:layout_weight="1" android:background="@drawable/button_secondary" android:text="@string/history" android:textColor="@color/blue2" android:textStyle="bold" />
-            <Space android:layout_width="8dp" android:layout_height="1dp" />
-            <Button android:id="@+id/manageBaselinesButton" android:layout_width="0dp" android:layout_height="wrap_content" android:minHeight="52dp" android:paddingTop="9dp" android:paddingBottom="9dp" android:layout_weight="1" android:background="@drawable/button_secondary" android:text="@string/baselines" android:textColor="@color/blue2" android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="8dp">
-            <Button android:id="@+id/privacyButton" android:layout_width="0dp" android:layout_height="wrap_content" android:minHeight="52dp" android:paddingTop="9dp" android:paddingBottom="9dp" android:layout_weight="1" android:background="@drawable/button_secondary" android:text="@string/privacy" android:textColor="@color/blue2" android:textStyle="bold" />
-            <Space android:layout_width="8dp" android:layout_height="1dp" />
-            <Button android:id="@+id/languageButton" android:layout_width="0dp" android:layout_height="wrap_content" android:minHeight="52dp" android:paddingTop="9dp" android:paddingBottom="9dp" android:layout_weight="1" android:background="@drawable/button_secondary" android:text="@string/language" android:textColor="@color/blue2" android:textStyle="bold" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/aboutButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="52dp"
-            android:paddingTop="9dp"
-            android:paddingBottom="9dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/button_secondary"
-            android:text="@string/about"
-            android:textColor="@color/blue2"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/panel"
-            android:padding="16dp"
-            android:layout_marginTop="12dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/live_snapshot"
-                android:textColor="@color/blue2"
-                android:textStyle="bold"
-                android:textSize="12sp" />
-
-            <TextView android:id="@+id/operator" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/operator_empty" android:textColor="@color/text" android:textSize="14sp" android:layout_marginTop="10dp" />
-            <TextView android:id="@+id/radio" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/radio_empty" android:textColor="@color/text" android:textSize="14sp" android:layout_marginTop="5dp" />
-            <TextView android:id="@+id/serving" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/serving_empty" android:textColor="@color/text" android:textSize="14sp" android:layout_marginTop="5dp" />
-            <TextView android:id="@+id/neighbors" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/neighbors_empty" android:textColor="@color/text" android:textSize="14sp" android:layout_marginTop="5dp" />
-            <TextView android:id="@+id/signal" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/signal_empty" android:textColor="@color/text" android:textSize="14sp" android:layout_marginTop="5dp" />
-            <TextView android:id="@+id/neighborState" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/neighbor_wait" android:textColor="@color/muted" android:textSize="12sp" android:layout_marginTop="8dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/panel"
-            android:padding="16dp"
-            android:layout_marginTop="12dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/signal_timeline"
-                android:textColor="@color/blue2"
-                android:textStyle="bold"
-                android:textSize="12sp" />
-
-            <com.nexvary.imsi.SignalTimelineView
-                android:id="@+id/signalTimeline"
-                android:layout_width="match_parent"
-                android:layout_height="210dp"
-                android:layout_marginTop="8dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/signal_timeline_help"
-                android:textColor="@color/muted"
-                android:textSize="11sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/panel"
-            android:padding="16dp"
-            android:layout_marginTop="12dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/why_flagged"
-                android:textColor="@color/red"
-                android:textStyle="bold"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/whyFlagged"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/no_scan_reason"
-                android:textColor="@color/text"
-                android:textSize="13sp"
-                android:lineSpacingExtra="4dp"
-                android:layout_marginTop="8dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/panel"
-            android:padding="16dp"
-            android:layout_marginTop="12dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/cell_change_map"
-                android:textColor="@color/blue2"
-                android:textStyle="bold"
-                android:textSize="12sp" />
-
-            <com.nexvary.imsi.CellChangeView
-                android:id="@+id/changeMap"
-                android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:layout_marginTop="10dp" />
-
-            <TextView
-                android:id="@+id/historyText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/no_history"
-                android:textColor="@color/muted"
-                android:textSize="12sp"
-                android:layout_marginTop="8dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/panel"
-            android:padding="16dp"
-            android:layout_marginTop="12dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/trusted_baselines"
-                android:textColor="@color/blue2"
-                android:textStyle="bold"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/baselineText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/no_baselines"
-                android:textColor="@color/muted"
-                android:textSize="13sp"
-                android:layout_marginTop="8dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="12dp">
-
-            <Button
-                android:id="@+id/reportButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:minHeight="54dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_primary"
-                android:text="@string/export_pdf"
-                android:textColor="@color/text"
-                android:textStyle="bold" />
-
-            <Space android:layout_width="10dp" android:layout_height="1dp" />
-
-            <Button
-                android:id="@+id/clearHistoryButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:minHeight="54dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_secondary"
-                android:text="@string/clear_history"
-                android:textColor="@color/blue2"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/panel"
-            android:padding="16dp"
-            android:layout_marginTop="12dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/why_matters"
-                android:textColor="@color/red"
-                android:textStyle="bold"
-                android:textSize="12sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/why_matters_body"
-                android:textColor="@color/muted"
-                android:textSize="13sp"
-                android:lineSpacingExtra="4dp"
-                android:layout_marginTop="8dp" />
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/privacy_footer"
-            android:textColor="#6F879A"
-            android:textSize="11sp"
-            android:lineSpacingExtra="3dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="28dp" />
     </LinearLayout>
-</ScrollView>
+
+    <!-- Five circular measurement gauges -->
+    <LinearLayout android:layout_width="match_parent" android:layout_height="0dp"
+        android:layout_weight="1.6" android:orientation="horizontal" android:layout_marginTop="8dp">
+        <com.nexvary.imsi.CircularMeasureView android:id="@+id/gaugeRsrp"
+            android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:contentDescription="RSRP" />
+        <com.nexvary.imsi.CircularMeasureView android:id="@+id/gaugeRsrq"
+            android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:contentDescription="RSRQ" />
+        <com.nexvary.imsi.CircularMeasureView android:id="@+id/gaugeSinr"
+            android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:contentDescription="SINR" />
+        <com.nexvary.imsi.CircularMeasureView android:id="@+id/gaugeRssi"
+            android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:contentDescription="RSSI" />
+        <com.nexvary.imsi.CircularMeasureView android:id="@+id/gaugeNetwork"
+            android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:contentDescription="Network" />
+    </LinearLayout>
+
+    <!-- Graph + Anomaly gauge side by side -->
+    <LinearLayout android:layout_width="match_parent" android:layout_height="0dp"
+        android:layout_weight="2.6" android:orientation="horizontal" android:layout_marginTop="8dp">
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1.5" android:orientation="vertical"
+            android:background="@drawable/panel" android:padding="8dp">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="@string/cell_change_map" android:textColor="@color/blue2"
+                android:textStyle="bold" android:textSize="10sp" />
+            <com.nexvary.imsi.CellChangeView android:id="@+id/changeMap"
+                android:layout_width="match_parent" android:layout_height="0dp"
+                android:layout_weight="1" android:layout_marginTop="4dp" />
+        </LinearLayout>
+        <Space android:layout_width="6dp" android:layout_height="1dp" />
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:orientation="vertical"
+            android:background="@drawable/panel" android:padding="6dp">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="@string/anomaly_indicator" android:textColor="@color/amber"
+                android:textStyle="bold" android:textSize="10sp" />
+            <com.nexvary.imsi.AnomalyGaugeView android:id="@+id/anomalyGauge"
+                android:layout_width="match_parent" android:layout_height="0dp"
+                android:layout_weight="1" android:layout_marginTop="2dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Current cell info panel -->
+    <LinearLayout android:layout_width="match_parent" android:layout_height="0dp"
+        android:layout_weight="1.8" android:orientation="vertical"
+        android:background="@drawable/panel" android:padding="10dp" android:layout_marginTop="8dp">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/current_cell_info" android:textColor="@color/blue2"
+            android:textStyle="bold" android:textSize="10sp" />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="0dp"
+            android:layout_weight="1" android:orientation="horizontal" android:layout_marginTop="4dp">
+            <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"
+                android:layout_weight="1" android:orientation="vertical">
+                <TextView android:id="@+id/infoCellId"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textColor="@color/text" android:textSize="12sp" android:text="Cell ID: —" />
+                <TextView android:id="@+id/infoEnodeB"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textColor="@color/muted" android:textSize="11sp"
+                    android:text="eNodeB: —" android:layout_marginTop="2dp" />
+                <TextView android:id="@+id/infoBand"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textColor="@color/muted" android:textSize="11sp"
+                    android:text="Band: —" android:layout_marginTop="2dp" />
+            </LinearLayout>
+            <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"
+                android:layout_weight="1" android:orientation="vertical">
+                <TextView android:id="@+id/infoTech"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textColor="@color/text" android:textSize="12sp" android:text="Tech: —" />
+                <TextView android:id="@+id/infoOperator"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textColor="@color/muted" android:textSize="11sp"
+                    android:text="Op: —" android:layout_marginTop="2dp" />
+                <TextView android:id="@+id/liveState"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textColor="@color/muted" android:textSize="10sp"
+                    android:text="@string/live_off" android:layout_marginTop="2dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Action buttons -->
+    <LinearLayout android:layout_width="match_parent" android:layout_height="0dp"
+        android:layout_weight="1.1" android:orientation="horizontal" android:layout_marginTop="8dp">
+        <Button android:id="@+id/scanButton"
+            android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+            android:background="@drawable/button_primary" android:text="@string/scan_now"
+            android:textColor="@color/text" android:textStyle="bold" android:textSize="11sp" />
+        <Space android:layout_width="5dp" android:layout_height="1dp" />
+        <Button android:id="@+id/liveButton"
+            android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+            android:background="@drawable/button_secondary" android:text="@string/start_live"
+            android:textColor="@color/red" android:textStyle="bold" android:textSize="11sp" />
+        <Space android:layout_width="5dp" android:layout_height="1dp" />
+        <Button android:id="@+id/reportButton"
+            android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+            android:background="@drawable/button_secondary" android:text="@string/export_pdf"
+            android:textColor="@color/blue2" android:textStyle="bold" android:textSize="11sp" />
+        <Space android:layout_width="5dp" android:layout_height="1dp" />
+        <Button android:id="@+id/baselineButton"
+            android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+            android:background="@drawable/button_secondary" android:text="@string/add_baseline_short"
+            android:textColor="@color/blue2" android:textStyle="bold" android:textSize="11sp" />
+    </LinearLayout>
+
+    <!-- Social links strip with genuine multicolor icons -->
+    <LinearLayout android:layout_width="match_parent" android:layout_height="0dp"
+        android:layout_weight="0.9" android:orientation="horizontal"
+        android:gravity="center_vertical" android:background="@drawable/panel"
+        android:paddingStart="6dp" android:paddingEnd="6dp" android:layout_marginTop="6dp">
+        <ImageView android:id="@+id/linkFacebook"
+            android:layout_width="0dp" android:layout_height="30dp" android:layout_weight="1"
+            android:src="@drawable/ic_social_facebook" android:scaleType="centerInside"
+            android:contentDescription="Facebook" android:clickable="true" android:focusable="true" />
+        <ImageView android:id="@+id/linkX"
+            android:layout_width="0dp" android:layout_height="30dp" android:layout_weight="1"
+            android:src="@drawable/ic_social_x" android:scaleType="centerInside"
+            android:contentDescription="X" android:clickable="true" android:focusable="true" />
+        <ImageView android:id="@+id/linkYoutube"
+            android:layout_width="0dp" android:layout_height="30dp" android:layout_weight="1"
+            android:src="@drawable/ic_social_youtube" android:scaleType="centerInside"
+            android:contentDescription="YouTube" android:clickable="true" android:focusable="true" />
+        <View android:layout_width="1dp" android:layout_height="match_parent"
+            android:background="@color/border" android:layout_marginTop="6dp" android:layout_marginBottom="6dp" />
+        <ImageView android:id="@+id/linkWebsite"
+            android:layout_width="0dp" android:layout_height="30dp" android:layout_weight="1.5"
+            android:src="@drawable/ic_social_website" android:scaleType="centerInside"
+            android:contentDescription="nexvary.com" android:clickable="true" android:focusable="true" />
+        <View android:layout_width="1dp" android:layout_height="match_parent"
+            android:background="@color/border" android:layout_marginTop="6dp" android:layout_marginBottom="6dp" />
+        <ImageView android:id="@+id/linkEmail"
+            android:layout_width="0dp" android:layout_height="30dp" android:layout_weight="1"
+            android:src="@drawable/ic_social_email" android:scaleType="centerInside"
+            android:contentDescription="Email" android:clickable="true" android:focusable="true" />
+    </LinearLayout>
+</LinearLayout>

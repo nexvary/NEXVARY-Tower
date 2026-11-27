@@ -8,8 +8,8 @@ android {
         applicationId 'com.nexvary.imsi'
         minSdk 29
         targetSdk 35
-        versionCode 6
-        versionName '0.6.0-rc1'
+        versionCode 7
+        versionName '0.7.0'
     }
 
     buildTypes {
@@ -22,4 +22,4 @@ android {
     compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
 }
 
-dependencies { } // No AndroidX dependency: native Android APIs only
+dependencies { testImplementation 'junit:junit:4.13.2' }

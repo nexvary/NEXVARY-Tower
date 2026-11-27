@@ -1,0 +1,22 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <!-- Building body — silver -->
+    <path android:fillColor="#808080"
+        android:pathData="M4,10 L4,22 L20,22 L20,10 Z"/>
+    <!-- Building top / roof — amber -->
+    <path android:fillColor="#FFB300"
+        android:pathData="M2,10 L12,3 L22,10 Z"/>
+    <!-- Windows row 1 — blue -->
+    <path android:fillColor="#00B0FF"
+        android:pathData="M6,13 L9,13 L9,16 L6,16 Z M10,13 L14,13 L14,16 L10,16 Z M15,13 L18,13 L18,16 L15,16 Z"/>
+    <!-- Door — green -->
+    <path android:fillColor="#00E676"
+        android:pathData="M10,18 L14,18 L14,22 L10,22 Z"/>
+    <!-- Flag / antenna mast — amber -->
+    <path android:fillColor="#FFB300"
+        android:pathData="M11.5,1 L12.5,1 L12.5,4 L11.5,4 Z"/>
+    <!-- Flag — violet -->
+    <path android:fillColor="#9D4EDD"
+        android:pathData="M12.5,1 L16,2 L12.5,3 Z"/>
+</vector>

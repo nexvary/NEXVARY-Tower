@@ -1,0 +1,22 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <!-- Left page — silver -->
+    <path android:fillColor="#808080"
+        android:pathData="M2,4 L11,4 L11,20 Q7,19 2,20 Z"/>
+    <!-- Right page — silver lighter -->
+    <path android:fillColor="#A0A0A0"
+        android:pathData="M13,4 L22,4 L22,20 Q17,19 13,20 Z"/>
+    <!-- Spine — green -->
+    <path android:fillColor="#00E676"
+        android:pathData="M11,4 L13,4 L13,20 L11,20 Z"/>
+    <!-- Left lines — blue -->
+    <path android:fillColor="#00B0FF"
+        android:pathData="M4,7 L10,7 L10,7.6 L4,7.6 Z M4,9.5 L10,9.5 L10,10.1 L4,10.1 Z M4,12 L10,12 L10,12.6 L4,12.6 Z M4,14.5 L10,14.5 L10,15.1 L4,15.1 Z"/>
+    <!-- Right lines — blue -->
+    <path android:fillColor="#00B0FF"
+        android:pathData="M14,7 L20,7 L20,7.6 L14,7.6 Z M14,9.5 L20,9.5 L20,10.1 L14,10.1 Z M14,12 L20,12 L20,12.6 L14,12.6 Z"/>
+    <!-- Bookmark — amber -->
+    <path android:fillColor="#FFB300"
+        android:pathData="M18,2 L21,2 L21,8 L19.5,7 L18,8 Z"/>
+</vector>

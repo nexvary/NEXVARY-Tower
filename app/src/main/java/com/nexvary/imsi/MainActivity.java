@@ -4,9 +4,10 @@ import android.Manifest;
 import android.app.*;
 import android.content.*;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.*;
 import android.telephony.*;
-import android.view.WindowManager;
+import android.view.*;
 import android.widget.*;
 import org.json.*;
 import java.io.File;
@@ -18,11 +19,11 @@ public class MainActivity extends Activity {
     private static final long LIVE_INTERVAL_MS = 8_000L;
 
     private TelephonyManager tel;
-    private TextView riskTitle, riskSummary, operator, radio, serving, neighbors, signal, historyText, baselineText, whyFlagged, liveState, neighborState;
+    private TextView liveState, monitorStatusPill, infoCellId, infoEnodeB, infoBand, infoTech, infoOperator;
     private Button liveButton;
-    private RadarView radar;
+    private AnomalyGaugeView anomalyGauge;
+    private CircularMeasureView gaugeRsrp, gaugeRsrq, gaugeSinr, gaugeRssi, gaugeNetwork;
     private CellChangeView changeMap;
-    private SignalTimelineView signalTimeline;
     private SecureStore store;
     private ScanRecord latest;
     private boolean liveMonitoring = false;
@@ -38,48 +39,54 @@ public class MainActivity extends Activity {
     @Override public void onCreate(Bundle b) {
         LanguageUtil.apply(this);
         super.onCreate(b);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+        SecureScreenUtil.apply(this);
         android.view.View screen = getLayoutInflater().inflate(R.layout.activity_main, null);
         setContentView(UiKit.withBottomNav(this, screen, 0));
-        ScrollView rootScroll = screen.findViewById(R.id.rootScroll);
-        rootScroll.setClipToPadding(false);
         tel = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
         store = new SecureStore(this);
 
-        radar = findViewById(R.id.radar);
-        changeMap = findViewById(R.id.changeMap);
-        signalTimeline = findViewById(R.id.signalTimeline);
-        riskTitle = findViewById(R.id.riskTitle);
-        riskSummary = findViewById(R.id.riskSummary);
-        operator = findViewById(R.id.operator);
-        radio = findViewById(R.id.radio);
-        serving = findViewById(R.id.serving);
-        neighbors = findViewById(R.id.neighbors);
-        signal = findViewById(R.id.signal);
-        historyText = findViewById(R.id.historyText);
-        baselineText = findViewById(R.id.baselineText);
-        whyFlagged = findViewById(R.id.whyFlagged);
-        liveState = findViewById(R.id.liveState);
-        neighborState = findViewById(R.id.neighborState);
-        liveButton = findViewById(R.id.liveButton);
+        anomalyGauge   = screen.findViewById(R.id.anomalyGauge);
+        gaugeRsrp      = screen.findViewById(R.id.gaugeRsrp);
+        gaugeRsrq      = screen.findViewById(R.id.gaugeRsrq);
+        gaugeSinr      = screen.findViewById(R.id.gaugeSinr);
+        gaugeRssi      = screen.findViewById(R.id.gaugeRssi);
+        gaugeNetwork   = screen.findViewById(R.id.gaugeNetwork);
+        changeMap      = screen.findViewById(R.id.changeMap);
+        liveState      = screen.findViewById(R.id.liveState);
+        monitorStatusPill = screen.findViewById(R.id.monitorStatusPill);
+        infoCellId     = screen.findViewById(R.id.infoCellId);
+        infoEnodeB     = screen.findViewById(R.id.infoEnodeB);
+        infoBand       = screen.findViewById(R.id.infoBand);
+        infoTech       = screen.findViewById(R.id.infoTech);
+        infoOperator   = screen.findViewById(R.id.infoOperator);
+        liveButton     = screen.findViewById(R.id.liveButton);
 
-        findViewById(R.id.scanButton).setOnClickListener(v -> ensureAndScan(false));
+        screen.findViewById(R.id.scanButton).setOnClickListener(v -> ensureAndScan(false));
         liveButton.setOnClickListener(v -> toggleLiveMonitoring());
-        findViewById(R.id.baselineButton).setOnClickListener(v -> promptBaseline());
-        findViewById(R.id.historyButton).setOnClickListener(v -> startActivity(new Intent(this, HistoryActivity.class)));
-        findViewById(R.id.manageBaselinesButton).setOnClickListener(v -> startActivity(new Intent(this, BaselinesActivity.class)));
-        findViewById(R.id.privacyButton).setOnClickListener(v -> startActivity(new Intent(this, PrivacyActivity.class)));
-        findViewById(R.id.aboutButton).setOnClickListener(v -> startActivity(new Intent(this, AboutActivity.class)));
-        findViewById(R.id.languageButton).setOnClickListener(v -> { LanguageUtil.toggle(this); recreate(); });
-        findViewById(R.id.reportButton).setOnClickListener(v -> exportReport());
-        findViewById(R.id.clearHistoryButton).setOnClickListener(v -> confirmClear());
-        refreshLocalPanels();
+        screen.findViewById(R.id.baselineButton).setOnClickListener(v -> promptBaseline());
+        screen.findViewById(R.id.reportButton).setOnClickListener(v -> exportReport());
+
+        // Company links (TG07)
+        screen.findViewById(R.id.linkFacebook).setOnClickListener(v -> LinkHelper.openUrl(this, LinkHelper.URL_FACEBOOK));
+        screen.findViewById(R.id.linkX).setOnClickListener(v -> LinkHelper.openUrl(this, LinkHelper.URL_X));
+        screen.findViewById(R.id.linkYoutube).setOnClickListener(v -> LinkHelper.openUrl(this, LinkHelper.URL_YOUTUBE));
+        screen.findViewById(R.id.linkWebsite).setOnClickListener(v -> LinkHelper.openUrl(this, LinkHelper.URL_WEBSITE));
+        screen.findViewById(R.id.linkEmail).setOnClickListener(v -> LinkHelper.openEmail(this));
+
+        // Init gauges with N/A
+        boolean ar = LanguageUtil.current(this).equals("ar");
+        gaugeRsrp.setMeasure("N/A", "dBm", "RSRP", Color.rgb(90, 120, 148), 0f);
+        gaugeRsrq.setMeasure("N/A", "dB",  "RSRQ", Color.rgb(90, 120, 148), 0f);
+        gaugeSinr.setMeasure("N/A", "dB",  "SINR", Color.rgb(90, 120, 148), 0f);
+        gaugeRssi.setMeasure("N/A", "dBm", "RSSI", Color.rgb(90, 120, 148), 0f);
+        gaugeNetwork.setNetworkType(ar ? "—" : "—", Color.rgb(90, 120, 148));
+
+        refreshChangeMap();
     }
 
     @Override protected void onPause() {
         super.onPause();
-        // Deliberately foreground-only: no covert/background cellular monitoring.
-        if (liveMonitoring) stopLiveMonitoring("Paused while app is not visible");
+        if (liveMonitoring) stopLiveMonitoring(t("Paused", "متوقف مؤقتًا"));
     }
 
     private boolean hasPermissions() {
@@ -89,12 +96,12 @@ public class MainActivity extends Activity {
 
     private void ensureAndScan(boolean fromLive) {
         List<String> missing = new ArrayList<>();
-        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) missing.add(Manifest.permission.ACCESS_FINE_LOCATION);
-        if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) missing.add(Manifest.permission.READ_PHONE_STATE);
-        if (!missing.isEmpty()) {
-            requestPermissions(missing.toArray(new String[0]), REQ);
-            return;
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            missing.add(Manifest.permission.ACCESS_FINE_LOCATION);
+            missing.add(Manifest.permission.ACCESS_COARSE_LOCATION);
         }
+        if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) missing.add(Manifest.permission.READ_PHONE_STATE);
+        if (!missing.isEmpty()) { requestPermissions(missing.toArray(new String[0]), REQ); return; }
         scan(fromLive);
     }
 
@@ -104,25 +111,17 @@ public class MainActivity extends Activity {
             boolean ok = g.length > 0;
             for (int x : g) if (x != PackageManager.PERMISSION_GRANTED) ok = false;
             if (ok) scan(false);
-            else {
-                riskTitle.setText(t("Permissions required","الصلاحيات مطلوبة"));
-                riskSummary.setText(t("Cell telemetry requires Phone and precise Location permission on Android. NEXVARY does not upload your location or cell history.","يتطلب الوصول إلى بيانات الخلايا صلاحية الهاتف والموقع الدقيق في Android. لا يرفع NEXVARY موقعك أو سجل الخلايا."));
-            }
         }
     }
 
     private void toggleLiveMonitoring() {
-        if (liveMonitoring) {
-            stopLiveMonitoring("Live monitoring stopped");
-            return;
-        }
-        if (!hasPermissions()) {
-            ensureAndScan(false);
-            return;
-        }
+        if (liveMonitoring) { stopLiveMonitoring(t("Live monitoring stopped", "توقفت المراقبة المباشرة")); return; }
+        if (!hasPermissions()) { ensureAndScan(false); return; }
         liveMonitoring = true;
-        liveButton.setText(t("STOP LIVE","إيقاف المباشر"));
-        liveState.setText(t("LIVE · foreground-only · every 8 seconds","مباشر · في الواجهة فقط · كل 8 ثوانٍ"));
+        liveButton.setText(t("STOP", "إيقاف"));
+        liveState.setText(t("LIVE · foreground-only · every 8s", "مباشر · في الواجهة · كل 8 ث"));
+        monitorStatusPill.setText(t("Active · local only", "نشطة (محلية فقط)"));
+        monitorStatusPill.setTextColor(Color.rgb(41, 241, 139));
         handler.removeCallbacks(liveTick);
         handler.post(liveTick);
     }
@@ -130,8 +129,12 @@ public class MainActivity extends Activity {
     private void stopLiveMonitoring(String state) {
         liveMonitoring = false;
         handler.removeCallbacks(liveTick);
-        if (liveButton != null) liveButton.setText(t("START LIVE","مراقبة مباشرة"));
+        if (liveButton != null) liveButton.setText(t("LIVE", "مباشر"));
         if (liveState != null) liveState.setText(state);
+        if (monitorStatusPill != null) {
+            monitorStatusPill.setText(t("Monitoring off", "المراقبة متوقفة"));
+            monitorStatusPill.setTextColor(Color.rgb(142, 164, 184));
+        }
     }
 
     private void scan(boolean fromLive) {
@@ -140,7 +143,8 @@ public class MainActivity extends Activity {
             String rat = networkName(tel.getDataNetworkType());
             List<CellInfo> cells = tel.getAllCellInfo();
             int registered = 0, neigh = 0, bestDbm = -999, bestQuality = -999;
-            String servingId = "—";
+            int rsrp = Integer.MAX_VALUE, rsrq = Integer.MAX_VALUE, sinr = Integer.MAX_VALUE, rssi = Integer.MAX_VALUE;
+            String servingId = "—", servingCell = "—", servingEnodeB = "—", servingBand = "—";
             List<String> neighborIds = new ArrayList<>();
 
             if (cells != null) for (CellInfo c : cells) {
@@ -151,11 +155,45 @@ public class MainActivity extends Activity {
                 if (c.isRegistered()) {
                     registered++;
                     servingId = identity(c);
+                    // Extract individual measurements for gauges
+                    if (c instanceof CellInfoLte) {
+                        CellSignalStrengthLte s = ((CellInfoLte) c).getCellSignalStrength();
+                        CellIdentityLte id = ((CellInfoLte) c).getCellIdentity();
+                        rsrp = s.getRsrp();
+                        rsrq = s.getRsrq();
+                        try { sinr = s.getRssnr(); } catch (Exception ignored) {}
+                        try { rssi = s.getRssi(); } catch (Exception ignored) {}
+                        servingCell = String.valueOf(id.getCi());
+                        try { servingEnodeB = String.valueOf(id.getEarfcn()); } catch (Exception ignored) {}
+                        int earfcn = id.getEarfcn();
+                        servingBand = earfcn != Integer.MAX_VALUE ? "EARFCN " + earfcn : "LTE";
+                    } else if (c instanceof CellInfoNr) {
+                        CellSignalStrengthNr s = (CellSignalStrengthNr) ((CellInfoNr) c).getCellSignalStrength();
+                        CellIdentityNr id = (CellIdentityNr) ((CellInfoNr) c).getCellIdentity();
+                        try { rsrp = s.getSsRsrp(); rsrq = s.getSsRsrq(); sinr = s.getSsSinr(); } catch (Exception ignored) {}
+                        servingCell = String.valueOf(id.getNci());
+                        servingBand = "5G NR";
+                    }
                 } else {
                     neigh++;
                     neighborIds.add(identity(c));
                 }
             }
+
+            // Update circular measurement gauges (TG02)
+            updateGaugeRsrp(rsrp);
+            updateGaugeRsrq(rsrq);
+            updateGaugeSinr(sinr);
+            updateGaugeRssi(rssi);
+            updateGaugeNetwork(rat);
+
+            // Update cell info panel (TG05)
+            infoCellId.setText("Cell ID: " + servingCell);
+            infoEnodeB.setText("eNodeB: " + servingEnodeB);
+            infoBand.setText("Band: " + servingBand);
+            infoTech.setText("Tech: " + rat);
+            infoOperator.setText("Op: " + (op.isEmpty() ? "—" : op));
+
             Collections.sort(neighborIds);
             String neighborSignature = compactSignature(neighborIds);
             List<ScanRecord> old = loadHistory();
@@ -168,36 +206,56 @@ public class MainActivity extends Activity {
             while (old.size() > MAX_HISTORY) old.remove(0);
             saveHistory(old);
 
-            operator.setText(t("Operator: ","المشغل: ") + (op.isEmpty() ? t("Unknown","غير معروف") : op));
-            radio.setText(t("Radio: ","الشبكة: ") + rat);
-            serving.setText(t("Serving cell: ","الخلية الحالية: ") + servingId);
-            neighbors.setText(t("Neighbor cells: ","الخلايا المجاورة: ") + neigh);
-            signal.setText(t("Signal: ","الإشارة: ") + (bestDbm == -999 ? "—" : bestDbm + " dBm") + (bestQuality == -999 ? "" : " · quality " + bestQuality + " dB"));
-            radar.setRisk(a.score);
-            whyFlagged.setText(a.reasons.isEmpty() ? t("No material anomaly indicators were triggered by this scan.","لم يفعّل هذا الفحص مؤشرات شذوذ جوهرية.") : joinReasons(a.reasons));
-            neighborState.setText(a.neighborNote);
+            anomalyGauge.setScore(a.score);
+            refreshChangeMap();
 
-            if (a.score >= 70) {
-                riskTitle.setText(t("Elevated anomaly risk","مستوى شذوذ مرتفع"));
-                riskSummary.setText(t("Several independent indicators changed at the same time. This is not proof of an IMSI catcher; repeat scans and consider professional RF/TSCM validation if the pattern persists.","تغيرت عدة مؤشرات مستقلة في الوقت نفسه. هذا ليس إثباتًا لوجود IMSI Catcher؛ أعد الفحص وفكر في تحقق RF/TSCM مهني إذا استمر النمط."));
-            } else if (a.score >= 40) {
-                riskTitle.setText(t("Review recommended","يوصى بالمراجعة"));
-                riskSummary.setText(t("Multiple moderate indicators deserve comparison over time. Review the reason list, trusted baselines and cell-transition timeline before drawing conclusions.","ظهرت عدة مؤشرات متوسطة تستحق المقارنة عبر الزمن. راجع الأسباب وخطوط الأساس ومسار تغير الخلايا قبل استخلاص نتيجة."));
-            } else if (a.score >= 20) {
-                riskTitle.setText(t("Low-level variance","تباين منخفض"));
-                riskSummary.setText(t("A small number of weak indicators were observed. Normal mobility, congestion and carrier optimization can produce similar changes.","ظهرت مؤشرات ضعيفة قليلة. الحركة الطبيعية والازدحام وتحسينات شركة الاتصالات قد تنتج تغيرات مماثلة."));
-            } else {
-                riskTitle.setText(t("No strong anomaly observed","لا يوجد شذوذ قوي ظاهر"));
-                riskSummary.setText(t("This snapshot shows no strong anomaly. A normal score cannot rule out sophisticated cell-site simulators.","لا يظهر هذا القياس شذوذًا قويًا. النتيجة الطبيعية لا تستبعد محاكيات الأبراج المتقدمة."));
-            }
-
-            refreshLocalPanels();
             if (rat.contains("2G") && (previous == null || !previous.radio.contains("2G")) && !fromLive) show2GWarning();
         } catch (SecurityException e) {
-            riskTitle.setText(t("Permission unavailable","الصلاحية غير متاحة"));
-            riskSummary.setText(t("Android restricted cellular telemetry. Check app permissions and Location services.","قيّد Android بيانات الشبكة الخلوية. تحقق من صلاحيات التطبيق وخدمات الموقع."));
-            if (liveMonitoring) stopLiveMonitoring("Live monitoring stopped · permission unavailable");
+            if (liveMonitoring) stopLiveMonitoring(t("Live monitoring stopped · permission unavailable", "توقف · الصلاحية غير متاحة"));
         }
+    }
+
+    private void updateGaugeRsrp(int rsrp) {
+        if (rsrp == Integer.MAX_VALUE || rsrp == -999) {
+            gaugeRsrp.setMeasure("N/A", "dBm", "RSRP", Color.rgb(90, 120, 148), 0f); return;
+        }
+        float f = Math.max(0f, Math.min(1f, (rsrp + 140f) / 96f));
+        int c = rsrp >= -80 ? Color.rgb(41,241,139) : rsrp >= -100 ? Color.rgb(255,181,63) : Color.rgb(255,42,66);
+        gaugeRsrp.setMeasure(String.valueOf(rsrp), "dBm", "RSRP", c, f);
+    }
+
+    private void updateGaugeRsrq(int rsrq) {
+        if (rsrq == Integer.MAX_VALUE || rsrq == -999) {
+            gaugeRsrq.setMeasure("N/A", "dB", "RSRQ", Color.rgb(90, 120, 148), 0f); return;
+        }
+        float f = Math.max(0f, Math.min(1f, (rsrq + 20f) / 17f));
+        int c = rsrq >= -10 ? Color.rgb(41,241,139) : rsrq >= -15 ? Color.rgb(255,181,63) : Color.rgb(255,42,66);
+        gaugeRsrq.setMeasure(String.valueOf(rsrq), "dB", "RSRQ", c, f);
+    }
+
+    private void updateGaugeSinr(int sinr) {
+        if (sinr == Integer.MAX_VALUE || sinr == -999) {
+            gaugeSinr.setMeasure("N/A", "dB", "SINR", Color.rgb(90, 120, 148), 0f); return;
+        }
+        float f = Math.max(0f, Math.min(1f, (sinr + 20f) / 50f));
+        int c = sinr >= 13 ? Color.rgb(41,241,139) : sinr >= 0 ? Color.rgb(255,181,63) : Color.rgb(255,42,66);
+        gaugeSinr.setMeasure(String.valueOf(sinr), "dB", "SINR", c, f);
+    }
+
+    private void updateGaugeRssi(int rssi) {
+        if (rssi == Integer.MAX_VALUE || rssi == -999) {
+            gaugeRssi.setMeasure("N/A", "dBm", "RSSI", Color.rgb(90, 120, 148), 0f); return;
+        }
+        float f = Math.max(0f, Math.min(1f, (rssi + 130f) / 86f));
+        int c = rssi >= -65 ? Color.rgb(41,241,139) : rssi >= -85 ? Color.rgb(255,181,63) : Color.rgb(255,42,66);
+        gaugeRssi.setMeasure(String.valueOf(rssi), "dBm", "RSSI", c, f);
+    }
+
+    private void updateGaugeNetwork(String rat) {
+        String gen = rat.contains("5G") ? "5G" : rat.contains("4G") ? "4G" : rat.contains("3G") ? "3G" : rat.contains("2G") ? "2G" : "—";
+        int c = rat.contains("5G") ? Color.rgb(23,151,255) : rat.contains("4G") ? Color.rgb(41,241,139) : rat.contains("3G") ? Color.rgb(255,181,63) : Color.rgb(255,42,66);
+        String lbl = rat.contains("LTE") ? "LTE" : rat.contains("NR") ? "NR" : "";
+        gaugeNetwork.setMeasure(gen, lbl, t("Network","الشبكة"), c, 1f);
     }
 
     private Assessment assess(String op, String rat, String servingId, int neigh, int registered, int bestDbm, int quality, String neighborSignature, ScanRecord prev, List<String> baselines) {
@@ -209,15 +267,10 @@ public class MainActivity extends Activity {
         if (neigh == 0) { risk += 9; reasons.add("9 · no neighboring cells were reported"); }
         if (bestDbm > -55 && bestDbm != -999) { risk += 5; reasons.add("5 · unusually strong cellular signal (context-dependent)"); }
         if (quality != -999 && quality < -20) { risk += 3; reasons.add("3 · poor signal-quality metric despite available service"); }
-
         String current = op + "|" + rat + "|" + servingId;
         boolean matched = false;
-        for (String b : baselines) {
-            String[] parts = b.split("\\|", 2);
-            if (parts.length == 2 && parts[1].equals(current)) { matched = true; break; }
-        }
+        for (String bs : baselines) { String[] parts = bs.split("\\|", 2); if (parts.length == 2 && parts[1].equals(current)) { matched = true; break; } }
         if (!baselines.isEmpty() && !matched) { risk += 14; reasons.add("14 · current fingerprint does not match a saved trusted baseline"); }
-
         String neighborNote = "Neighbor comparison: not enough history yet.";
         if (prev != null) {
             if (!prev.cell.equals(servingId)) { risk += 5; reasons.add("5 · serving-cell identity changed since the previous scan"); }
@@ -228,12 +281,11 @@ public class MainActivity extends Activity {
                 int delta = Math.abs(neigh - prev.neighbors);
                 risk += delta >= 3 ? 8 : 4;
                 reasons.add((delta >= 3 ? "8" : "4") + " · neighboring-cell set changed between scans");
-                neighborNote = "Neighbor comparison: changed · count " + prev.neighbors + " → " + neigh;
+                neighborNote = "Neighbor comparison: changed · " + prev.neighbors + " → " + neigh;
             } else if (!neighborSignature.isEmpty()) {
-                neighborNote = "Neighbor comparison: stable against previous scan · " + neigh + " visible";
+                neighborNote = "Neighbor comparison: stable · " + neigh + " visible";
             }
         }
-        // v0.6: short-window anomaly correlation. A single cell change is common; repeated churn is weighted only when it persists.
         List<ScanRecord> recent = loadHistory();
         int from = Math.max(0, recent.size() - 5);
         Set<String> recentCells = new HashSet<>();
@@ -242,10 +294,7 @@ public class MainActivity extends Activity {
         for (int i = from; i < recent.size(); i++) {
             ScanRecord r = recent.get(i);
             if (r.cell != null && !r.cell.isEmpty() && !r.cell.equals("—")) recentCells.add(r.cell);
-            if (r.radio != null && !r.radio.isEmpty()) {
-                recentRadios.add(r.radio);
-                if (r.radio.contains("2G")) recent2G++;
-            }
+            if (r.radio != null && !r.radio.isEmpty()) { recentRadios.add(r.radio); if (r.radio.contains("2G")) recent2G++; }
         }
         if (!servingId.equals("—")) recentCells.add(servingId);
         recentRadios.add(rat);
@@ -259,33 +308,13 @@ public class MainActivity extends Activity {
         return new Assessment(Math.min(risk, 100), reasons, neighborNote);
     }
 
-    private boolean isDowngrade(String oldRadio, String newRadio) {
-        return generationRank(newRadio) < generationRank(oldRadio) && generationRank(newRadio) > 0;
-    }
-    private int generationRank(String r) {
-        if (r.contains("5G")) return 4;
-        if (r.contains("4G")) return 3;
-        if (r.contains("3G")) return 2;
-        if (r.contains("2G")) return 1;
-        return 0;
-    }
-
-    private String joinReasons(List<String> reasons) {
-        StringBuilder b = new StringBuilder();
-        for (int i = 0; i < reasons.size(); i++) {
-            if (i > 0) b.append("\n");
-            b.append("• ").append(reasons.get(i));
-        }
-        return b.toString();
-    }
+    private boolean isDowngrade(String oldRadio, String newRadio) { return generationRank(newRadio) < generationRank(oldRadio) && generationRank(newRadio) > 0; }
+    private int generationRank(String r) { if (r.contains("5G")) return 4; if (r.contains("4G")) return 3; if (r.contains("3G")) return 2; if (r.contains("2G")) return 1; return 0; }
 
     private String reasonsForStorage(List<String> reasons) {
         if (reasons == null || reasons.isEmpty()) return "No material anomaly indicators triggered.";
         StringBuilder b = new StringBuilder();
-        for (int i = 0; i < reasons.size(); i++) {
-            if (i > 0) b.append(" | ");
-            b.append(reasons.get(i));
-        }
+        for (int i = 0; i < reasons.size(); i++) { if (i > 0) b.append(" | "); b.append(reasons.get(i)); }
         return b.toString();
     }
 
@@ -294,11 +323,11 @@ public class MainActivity extends Activity {
         final EditText input = new EditText(this);
         input.setHint("e.g. Office, Home, HQ");
         new AlertDialog.Builder(this)
-                .setTitle("Name trusted baseline")
-                .setMessage("This label and the current cellular fingerprint are encrypted and stored only on this device.")
+                .setTitle(t("Name trusted baseline","اسم خط الأساس الموثوق"))
+                .setMessage(t("This fingerprint is encrypted and stored only on this device.","البصمة مشفرة ومحفوظة على هذا الجهاز فقط."))
                 .setView(input)
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("Save", (d, w) -> saveBaseline(input.getText().toString()))
+                .setNegativeButton(t("Cancel","إلغاء"), null)
+                .setPositiveButton(t("Save","حفظ"), (d, w) -> saveBaseline(input.getText().toString()))
                 .show();
     }
 
@@ -310,7 +339,6 @@ public class MainActivity extends Activity {
         b.add(name.replace("|", "-") + "|" + fingerprint);
         while (b.size() > 12) b.remove(0);
         saveBaselines(b);
-        refreshLocalPanels();
         Toast.makeText(this, t("Trusted baseline saved locally","تم حفظ خط الأساس محليًا"), Toast.LENGTH_SHORT).show();
     }
 
@@ -319,78 +347,31 @@ public class MainActivity extends Activity {
             File f = ReportExporter.create(this, loadHistory(), loadBaselines());
             startActivity(ReportExporter.share(this, f));
         } catch (Exception e) {
-            Toast.makeText(this, "Could not create report", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, t("Could not create report","تعذّر إنشاء التقرير"), Toast.LENGTH_LONG).show();
         }
-    }
-
-    private void confirmClear() {
-        new AlertDialog.Builder(this)
-                .setTitle("Clear local history?")
-                .setMessage("This removes scan history from encrypted local storage. Trusted baselines are kept.")
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("Clear", (d, w) -> {
-                    store.remove("history");
-                    latest = null;
-                    whyFlagged.setText("No scan is selected. Run a scan to see exactly why a result was flagged.");
-                    refreshLocalPanels();
-                }).show();
     }
 
     private void show2GWarning() {
         new AlertDialog.Builder(this)
-                .setTitle("2G fallback detected")
-                .setMessage("The active data radio reports 2G/GSM. A downgrade can be legitimate, but unexpected fallback is one anomaly worth reviewing—especially where 4G/5G is normally available.")
-                .setPositiveButton("Understood", null)
+                .setTitle(t("2G fallback detected","رُصد تراجع إلى 2G"))
+                .setMessage(t("The active data radio reports 2G/GSM. Unexpected 2G fallback is one anomaly worth reviewing.","الشبكة النشطة تُبلّغ عن 2G/GSM. التراجع غير المتوقع إلى 2G مؤشر يستحق المراجعة."))
+                .setPositiveButton(t("Understood","فهمت"), null)
                 .show();
     }
 
-    private void refreshLocalPanels() {
-        List<ScanRecord> h = loadHistory();
-        changeMap.setRecords(h);
-        signalTimeline.setRecords(h);
-        if (h.isEmpty()) historyText.setText("No local scan history yet.");
-        else {
-            ScanRecord r = h.get(h.size() - 1);
-            int changes = 0;
-            for (int i = 1; i < h.size(); i++) if (!h.get(i).cell.equals(h.get(i - 1).cell)) changes++;
-            historyText.setText(h.size() + " encrypted scans · " + changes + " cell transitions · latest risk " + r.risk + "/100");
-        }
-        List<String> b = loadBaselines();
-        baselineText.setText(b.isEmpty() ? "No trusted baselines saved." : b.size() + " trusted baselines saved locally.");
+    private void refreshChangeMap() {
+        changeMap.setRecords(loadHistory());
     }
 
     private List<ScanRecord> loadHistory() {
         List<ScanRecord> out = new ArrayList<>();
-        try {
-            JSONArray a = new JSONArray(store.get("history", "[]"));
-            for (int i = 0; i < a.length(); i++) out.add(ScanRecord.from(a.getJSONObject(i)));
-        } catch (Exception ignored) {}
+        try { JSONArray a = new JSONArray(store.get("history", "[]")); for (int i = 0; i < a.length(); i++) out.add(ScanRecord.from(a.getJSONObject(i))); } catch (Exception ignored) {}
         return out;
     }
-
-    private void saveHistory(List<ScanRecord> h) {
-        JSONArray a = new JSONArray();
-        for (ScanRecord r : h) a.put(r.json());
-        store.put("history", a.toString());
-    }
-
-    private List<String> loadBaselines() {
-        List<String> o = new ArrayList<>();
-        try {
-            JSONArray a = new JSONArray(store.get("baselines", "[]"));
-            for (int i = 0; i < a.length(); i++) o.add(a.optString(i));
-        } catch (Exception ignored) {}
-        return o;
-    }
-
-    private void saveBaselines(List<String> b) {
-        JSONArray a = new JSONArray();
-        for (String s : b) a.put(s);
-        store.put("baselines", a.toString());
-    }
-
+    private void saveHistory(List<ScanRecord> h) { JSONArray a = new JSONArray(); for (ScanRecord r : h) a.put(r.json()); store.put("history", a.toString()); }
+    private List<String> loadBaselines() { List<String> o = new ArrayList<>(); try { JSONArray a = new JSONArray(store.get("baselines", "[]")); for (int i = 0; i < a.length(); i++) o.add(a.optString(i)); } catch (Exception ignored) {} return o; }
+    private void saveBaselines(List<String> b) { JSONArray a = new JSONArray(); for (String s : b) a.put(s); store.put("baselines", a.toString()); }
     private String safe(String s) { return s == null ? "" : s; }
-
     private int signalDbm(CellInfo c) {
         if (c instanceof CellInfoLte) return ((CellInfoLte) c).getCellSignalStrength().getDbm();
         if (c instanceof CellInfoNr) return ((CellInfoNr) c).getCellSignalStrength().getDbm();
@@ -399,70 +380,31 @@ public class MainActivity extends Activity {
         if (c instanceof CellInfoCdma) return ((CellInfoCdma) c).getCellSignalStrength().getDbm();
         return -999;
     }
-
     private int signalQuality(CellInfo c) {
-        try {
-            if (c instanceof CellInfoLte) return ((CellInfoLte) c).getCellSignalStrength().getRsrq();
-            if (c instanceof CellInfoNr) return ((android.telephony.CellSignalStrengthNr) ((CellInfoNr) c).getCellSignalStrength()).getSsRsrq();
-        } catch (Exception ignored) {}
+        try { if (c instanceof CellInfoLte) return ((CellInfoLte) c).getCellSignalStrength().getRsrq(); } catch (Exception ignored) {}
         return -999;
     }
-
     private String identity(CellInfo c) {
-        if (c instanceof CellInfoLte) {
-            CellIdentityLte i = ((CellInfoLte) c).getCellIdentity();
-            return "LTE CI " + i.getCi() + " · TAC " + i.getTac() + " · " + i.getMccString() + "/" + i.getMncString();
-        }
-        if (c instanceof CellInfoNr) {
-            CellIdentityNr i = (CellIdentityNr) ((CellInfoNr) c).getCellIdentity();
-            return "5G NCI " + i.getNci() + " · TAC " + i.getTac() + " · " + i.getMccString() + "/" + i.getMncString();
-        }
-        if (c instanceof CellInfoWcdma) {
-            CellIdentityWcdma i = ((CellInfoWcdma) c).getCellIdentity();
-            return "3G CID " + i.getCid() + " · LAC " + i.getLac() + " · " + i.getMccString() + "/" + i.getMncString();
-        }
-        if (c instanceof CellInfoGsm) {
-            CellIdentityGsm i = ((CellInfoGsm) c).getCellIdentity();
-            return "2G CID " + i.getCid() + " · LAC " + i.getLac() + " · " + i.getMccString() + "/" + i.getMncString();
-        }
+        if (c instanceof CellInfoLte) { CellIdentityLte i = ((CellInfoLte) c).getCellIdentity(); return "LTE CI " + i.getCi() + " · TAC " + i.getTac() + " · " + i.getMccString() + "/" + i.getMncString(); }
+        if (c instanceof CellInfoNr) { CellIdentityNr i = (CellIdentityNr) ((CellInfoNr) c).getCellIdentity(); return "5G NCI " + i.getNci() + " · TAC " + i.getTac() + " · " + i.getMccString() + "/" + i.getMncString(); }
+        if (c instanceof CellInfoWcdma) { CellIdentityWcdma i = ((CellInfoWcdma) c).getCellIdentity(); return "3G CID " + i.getCid() + " · LAC " + i.getLac() + " · " + i.getMccString() + "/" + i.getMncString(); }
+        if (c instanceof CellInfoGsm) { CellIdentityGsm i = ((CellInfoGsm) c).getCellIdentity(); return "2G CID " + i.getCid() + " · LAC " + i.getLac() + " · " + i.getMccString() + "/" + i.getMncString(); }
         return c.getClass().getSimpleName();
     }
-
-    private String compactSignature(List<String> ids) {
-        if (ids == null || ids.isEmpty()) return "";
-        StringBuilder b = new StringBuilder();
-        int max = Math.min(12, ids.size());
-        for (int i = 0; i < max; i++) {
-            if (i > 0) b.append(";");
-            b.append(ids.get(i));
-        }
-        return Integer.toHexString(b.toString().hashCode()) + ":" + ids.size();
-    }
-
+    private String compactSignature(List<String> ids) { if (ids == null || ids.isEmpty()) return ""; StringBuilder b = new StringBuilder(); int max = Math.min(12, ids.size()); for (int i = 0; i < max; i++) { if (i > 0) b.append(";"); b.append(ids.get(i)); } return Integer.toHexString(b.toString().hashCode()) + ":" + ids.size(); }
     private String networkName(int t) {
         switch (t) {
             case TelephonyManager.NETWORK_TYPE_NR: return "5G NR";
             case TelephonyManager.NETWORK_TYPE_LTE: return "4G LTE";
-            case TelephonyManager.NETWORK_TYPE_HSPAP:
-            case TelephonyManager.NETWORK_TYPE_HSPA:
-            case TelephonyManager.NETWORK_TYPE_UMTS: return "3G";
-            case TelephonyManager.NETWORK_TYPE_GPRS:
-            case TelephonyManager.NETWORK_TYPE_EDGE:
-            case TelephonyManager.NETWORK_TYPE_GSM: return "2G GSM";
+            case TelephonyManager.NETWORK_TYPE_HSPAP: case TelephonyManager.NETWORK_TYPE_HSPA: case TelephonyManager.NETWORK_TYPE_UMTS: return "3G";
+            case TelephonyManager.NETWORK_TYPE_GPRS: case TelephonyManager.NETWORK_TYPE_EDGE: case TelephonyManager.NETWORK_TYPE_GSM: return "2G";
             default: return "Unknown";
         }
     }
-
     private String t(String en, String ar) { return LanguageUtil.current(this).equals("ar") ? ar : en; }
 
     private static final class Assessment {
-        final int score;
-        final List<String> reasons;
-        final String neighborNote;
-        Assessment(int score, List<String> reasons, String neighborNote) {
-            this.score = score;
-            this.reasons = reasons;
-            this.neighborNote = neighborNote;
-        }
+        final int score; final List<String> reasons; final String neighborNote;
+        Assessment(int s, List<String> r, String n) { score = s; reasons = r; neighborNote = n; }
     }
 }

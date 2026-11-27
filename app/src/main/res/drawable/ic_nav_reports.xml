@@ -1,0 +1,22 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <!-- Document outer — silver -->
+    <path android:fillColor="#C0C0C0"
+        android:pathData="M4,2 L15,2 L20,7 L20,22 L4,22 Z"/>
+    <!-- Corner fold — muted grey -->
+    <path android:fillColor="#606060"
+        android:pathData="M15,2 L20,7 L15,7 Z"/>
+    <!-- Bar 1 — blue (short) -->
+    <path android:fillColor="#00B0FF"
+        android:pathData="M6,19 L9,19 L9,15 L6,15 Z"/>
+    <!-- Bar 2 — neon green (medium) -->
+    <path android:fillColor="#00E676"
+        android:pathData="M10,19 L13,19 L13,12 L10,12 Z"/>
+    <!-- Bar 3 — amber (tall) -->
+    <path android:fillColor="#FFB300"
+        android:pathData="M14,19 L17,19 L17,9 L14,9 Z"/>
+    <!-- Axis line — grey -->
+    <path android:fillColor="#808080"
+        android:pathData="M6,20 L18,20 L18,20.8 L6,20.8 Z"/>
+</vector>

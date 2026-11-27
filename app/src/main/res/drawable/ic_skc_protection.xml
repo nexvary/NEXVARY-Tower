@@ -1,0 +1,27 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <!-- Shield background — green -->
+    <path android:fillColor="#003320"
+        android:pathData="M12,1 L21,4.5 L21,12 Q21,18.5 12,21 Q3,18.5 3,12 L3,4.5 Z"/>
+    <!-- Shield border — green -->
+    <path android:fillColor="@android:color/transparent"
+        android:strokeColor="#00E676" android:strokeWidth="1.5"
+        android:pathData="M12,1 L21,4.5 L21,12 Q21,18.5 12,21 Q3,18.5 3,12 L3,4.5 Z"/>
+    <!-- Padlock body — silver -->
+    <path android:fillColor="#C0C0C0"
+        android:pathData="M8,11 L16,11 L16,19 L8,19 Z"/>
+    <!-- Padlock shackle — silver -->
+    <path android:fillColor="@android:color/transparent"
+        android:strokeColor="#C0C0C0" android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:pathData="M9.5,11 L9.5,8.5 Q9.5,6 12,6 Q14.5,6 14.5,8.5 L14.5,11"/>
+    <!-- Keyhole — dark -->
+    <path android:fillColor="#003320"
+        android:pathData="M11,14 A1,1 0 1,0 11,14.001 A1,1 0 1,0 11,14 Z M13,13 A1,1 0 1,1 13,13.001 Z M11.3,14.8 L12.7,14.8 L13,17 L11,17 Z"/>
+    <!-- Checkmark — blue -->
+    <path android:fillColor="@android:color/transparent"
+        android:strokeColor="#00B0FF" android:strokeWidth="2"
+        android:strokeLineCap="round" android:strokeLineJoin="round"
+        android:pathData="M7,11.5 L10,14.5 L14.5,9"/>
+</vector>

@@ -1,0 +1,31 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <!-- Mast — silver -->
+    <path android:fillColor="#C0C0C0"
+        android:pathData="M11.3,22 L12.7,22 L12.7,8 L11.3,8 Z"/>
+    <!-- Strut left — silver -->
+    <path android:fillColor="#808080"
+        android:pathData="M11.3,8 L8,22 L9,22 L12,8 Z"/>
+    <!-- Strut right — silver -->
+    <path android:fillColor="#808080"
+        android:pathData="M12.7,8 L16,22 L15,22 L12,8 Z"/>
+    <!-- Antenna node — amber -->
+    <path android:fillColor="#FFB300"
+        android:pathData="M10.7,8 A1.3,1.3 0 1,0 13.3,8 A1.3,1.3 0 1,0 10.7,8 Z"/>
+    <!-- Arc 1 — blue (innermost) -->
+    <path android:fillColor="@android:color/transparent"
+        android:strokeColor="#00B0FF" android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:pathData="M8,6.5 Q12,3.5 16,6.5"/>
+    <!-- Arc 2 — green (middle) -->
+    <path android:fillColor="@android:color/transparent"
+        android:strokeColor="#00E676" android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:pathData="M5.5,5 Q12,0.5 18.5,5"/>
+    <!-- Arc 3 — violet (outer) -->
+    <path android:fillColor="@android:color/transparent"
+        android:strokeColor="#9D4EDD" android:strokeWidth="1.2"
+        android:strokeLineCap="round"
+        android:pathData="M3,3.5 Q12,-1.5 21,3.5"/>
+</vector>

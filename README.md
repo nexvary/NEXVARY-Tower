@@ -40,3 +40,27 @@ This software provides anomaly indicators, not conclusive IMSI-catcher detection
 - Existing UI, bottom navigation, privacy model, permissions and offline-only architecture preserved.
 
 Important: these are anomaly indicators only, not proof of an IMSI catcher.
+
+## v0.7.0 — Final UI Corrections (2026-11-27)
+
+### Nav icon fix
+- `ic_nav_reports`: rewrote with clean separate `<path>` elements (bar-chart document); eliminated Z M subpath split that caused visual clipping
+
+### More screen (compact redesign)
+- Replaced full-width buttons with compact icon+label card rows (48dp min height, 24dp multicolor icons)
+- Replaced `CheckBox` with `Switch` for screenshot prevention toggle
+- Added section labels (SETTINGS / RESOURCES / INFORMATION)
+- New icons: `ic_more_language`, `ic_more_screenshot`, `ic_more_baselines`, `ic_more_privacy`, `ic_more_skc`, `ic_more_about`
+
+### Security Knowledge Center (SKC)
+- Replaced A/B/C/D/E/F letter badges with six genuine multicolor `ImageView` icons: `ic_skc_cellular`, `ic_skc_interception`, `ic_skc_towerguard`, `ic_skc_alerts`, `ic_skc_protection`, `ic_skc_references`
+- Replaced `▼`/`▲` text chars with `ic_chevron_down` rotated 180° on expand
+- Replaced `›`/`∨` chars in article rows with `ic_chevron_right` rotated 90° on expand
+- Background updated to `Color.BLACK`
+- Reduced section gap from 8dp to 6dp
+
+### No functional changes
+- All article content preserved verbatim (bilingual AR/EN)
+- No INTERNET permission added
+- AES-GCM encryption unchanged
+- PR #3 kept open and unmerged

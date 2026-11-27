@@ -57,7 +57,7 @@ public class MoreActivity extends Activity {
 
         page.addView(UiKit.gap(this, 16));
         page.addView(UiKit.eyebrow(this, ar ? "عن التطبيق" : "ABOUT"));
-        Button about = UiKit.button(this, ar ? "عن المطور" : "ABOUT DEVELOPER");
+        Button about = UiKit.button(this, ar ? "عن التطبيق والتوعية الأمنية" : "ABOUT & SECURITY AWARENESS");
         about.setOnClickListener(v -> startActivity(new android.content.Intent(this, AboutActivity.class)));
         page.addView(about);
 
@@ -77,7 +77,7 @@ public class MoreActivity extends Activity {
         int p = UiKit.dp(this, 14);
         row.setPadding(p, p, p, p);
 
-        addLink(row, "🌐", ar ? "الموقع" : "Website", v -> LinkHelper.openUrl(this, LinkHelper.URL_WEBSITE), Color.rgb(23, 151, 255));
+        addLink(row, "W", ar ? "الموقع" : "Website", v -> LinkHelper.openUrl(this, LinkHelper.URL_WEBSITE), Color.rgb(23, 151, 255));
         addLink(row, "f", "Facebook", v -> LinkHelper.openUrl(this, LinkHelper.URL_FACEBOOK), Color.rgb(24, 119, 242));
         addLink(row, "▶", "YouTube", v -> LinkHelper.openUrl(this, LinkHelper.URL_YOUTUBE), Color.rgb(255, 0, 0));
         addLink(row, "✕", "X", v -> LinkHelper.openUrl(this, LinkHelper.URL_X), Color.WHITE);

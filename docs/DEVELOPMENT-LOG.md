@@ -108,3 +108,11 @@ versionCode 7 / versionName 0.7.0
 - Landscape layout: tested conceptually, not on device
 - mipmap-hdpi/mdpi/xhdpi/xxhdpi/xxxhdpi PNG launcher icons still use old PNGs — the adaptive icon replaces them on Android 8+; legacy PNG icons for older launchers should be regenerated from new vector
 - CellsActivity SINR / PCI field population still depends on device CellInfo availability
+
+### Final UI review build
+
+- Standardized bottom navigation image fitting, alignment and accessible selected labels. Added drawable regression tests for Reports artwork clearance within its 24×24 viewport.
+- Removed duplicate system insets in More and Security Knowledge Center, reduced spacing, used direction-aware margins and mirrored chevrons, and made the screenshot Switch a labeled 48dp control.
+- Kept the Knowledge Center content collapsed by default and improved the disclaimer contrast and type size.
+- CI runs lintDebug, assembleDebug and testDebugUnitTest. The new JVM tests check the five navigation vectors and Reports path bounds.
+- Debug version is 0.7.0 (7). OPPO CPH2577 hardware acceptance and owner approval for permanent signing are pending.

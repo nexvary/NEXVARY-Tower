@@ -33,3 +33,11 @@ Last updated: 2026-11-27
 - **Partial** — code written and committed; real device/emulator screenshot outstanding
 - **Missing** — not yet started
 - **Blocked** — depends on external resource (device, CI, owner approval)
+
+### Final UI review
+
+| Area | Status | Evidence |
+|---|---|---|
+| Fixed navigation | Partial | Equal icon slots with fit-center scaling, readable labels and explicit RTL/LTR direction. JVM drawable tests cover palette and viewport regressions. |
+| More and Security Knowledge Center | Partial | Direction-aware compact rows, accessible screenshot Switch, and higher-contrast educational disclaimer. OPPO device and TalkBack acceptance pending. |
+| Release signing | Blocked | Owner review of the Debug APK must precede permanent signing. |

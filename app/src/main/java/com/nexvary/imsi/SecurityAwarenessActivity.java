@@ -24,7 +24,8 @@ public class SecurityAwarenessActivity extends Activity {
         scroll.setClipToPadding(false);
 
         LinearLayout page = UiKit.page(this);
-        UiKit.applySystemBars(page);
+        page.setPadding(UiKit.dp(this, 16), UiKit.dp(this, 12),
+                UiKit.dp(this, 16), UiKit.dp(this, 12));
         scroll.addView(page);
 
         setContentView(UiKit.withBottomNav(this, scroll, 4));
@@ -46,7 +47,7 @@ public class SecurityAwarenessActivity extends Activity {
         page.addView(UiKit.body(this, ar
             ? "\u062f\u0644\u064a\u0644 \u062a\u0639\u0644\u064a\u0645\u064a \u0634\u0627\u0645\u0644 \u0644\u0641\u0647\u0645 \u0627\u0644\u0634\u0628\u0643\u0627\u062a \u0627\u0644\u062e\u0644\u0648\u064a\u0629\u060c \u062a\u0642\u0646\u064a\u0627\u062a \u0627\u0644\u0627\u0639\u062a\u0631\u0627\u0636\u060c \u0648\u0643\u064a\u0641\u064a\u0629 \u0639\u0645\u0644 Tower Guard. \u062c\u0645\u064a\u0639 \u0627\u0644\u0645\u062d\u062a\u0648\u064a\u0627\u062a \u0645\u062a\u0627\u062d\u0629 \u0628\u062f\u0648\u0646 \u0627\u062a\u0635\u0627\u0644."
             : "A comprehensive offline guide to cellular networks, interception technology, and how Tower Guard works."));
-        page.addView(UiKit.gap(this, 20));
+        page.addView(UiKit.gap(this, 8));
 
         addSection(page, R.drawable.ic_skc_cellular,
             ar ? "\u0623\u0633\u0627\u0633\u064a\u0627\u062a \u0627\u0644\u0634\u0628\u0643\u0627\u062a \u0627\u0644\u062e\u0644\u0648\u064a\u0629" : "Cellular Network Fundamentals",
@@ -159,12 +160,12 @@ public class SecurityAwarenessActivity extends Activity {
                     : "\u2022 Strobel (2007): 'IMSI Catcher' (Ruhr-Universit\u00e4t Bochum) \u2014 foundational academic description.\n\u2022 EFF (Electronic Frontier Foundation): knowledge base on cell-site simulator tracking.\n\u2022 CISA: advisories on critical communications security.\n\u2022 NIST SP 800-187: LTE network security guidelines.\nCited for educational attribution. Verify at original sources."}
             });
 
-        page.addView(UiKit.gap(this, 24));
+        page.addView(UiKit.gap(this, 8));
         TextView footer = UiKit.body(this, ar
             ? "\u062c\u0645\u064a\u0639 \u0627\u0644\u0645\u062d\u062a\u0648\u064a\u0627\u062a \u0644\u0644\u062a\u0648\u0639\u064a\u0629 \u0627\u0644\u062a\u0639\u0644\u064a\u0645\u064a\u0629 \u0641\u0642\u0637. \u0644\u0627 \u062a\u064f\u0645\u062b\u0651\u0644 \u0625\u0631\u0634\u0627\u062f\u0627\u062a \u0644\u0627\u0639\u062a\u0631\u0627\u0636 \u0623\u064a \u0627\u062a\u0635\u0627\u0644."
             : "All content in this section is for general educational awareness only. It does not constitute operational guidance for intercepting any communication.");
-        footer.setTextColor(Color.rgb(70, 95, 115));
-        footer.setTextSize(12f);
+        footer.setTextColor(Color.rgb(184, 200, 216));
+        footer.setTextSize(14f);
         page.addView(footer);
         page.addView(UiKit.gap(this, 12));
     }
@@ -175,14 +176,15 @@ public class SecurityAwarenessActivity extends Activity {
         header.setOrientation(LinearLayout.HORIZONTAL);
         header.setGravity(android.view.Gravity.CENTER_VERTICAL);
         int hp = UiKit.dp(this, 10);
-        header.setPadding(hp, hp, hp, hp);
+        header.setPadding(hp, UiKit.dp(this, 6), hp, UiKit.dp(this, 6));
+        header.setMinimumHeight(UiKit.dp(this, 48));
         header.setBackgroundResource(R.drawable.panel);
 
         int bSize = UiKit.dp(this, 32);
         ImageView badgeView = new ImageView(this);
         badgeView.setImageResource(iconRes);
         LinearLayout.LayoutParams blp = new LinearLayout.LayoutParams(bSize, bSize);
-        blp.rightMargin = UiKit.dp(this, 10);
+        blp.setMarginEnd(UiKit.dp(this, 10));
         badgeView.setLayoutParams(blp);
         header.addView(badgeView);
 
@@ -229,6 +231,7 @@ public class SecurityAwarenessActivity extends Activity {
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.HORIZONTAL);
         row.setGravity(android.view.Gravity.CENTER_VERTICAL);
+        row.setMinimumHeight(UiKit.dp(this, 48));
         int rp = UiKit.dp(this, 10);
         row.setPadding(rp, UiKit.dp(this, 8), rp, UiKit.dp(this, 8));
 
@@ -236,7 +239,7 @@ public class SecurityAwarenessActivity extends Activity {
         int dotSize = UiKit.dp(this, 5);
         LinearLayout.LayoutParams dlp = new LinearLayout.LayoutParams(dotSize, dotSize);
         dlp.topMargin = UiKit.dp(this, 4);
-        dlp.rightMargin = UiKit.dp(this, 8);
+        dlp.setMarginEnd(UiKit.dp(this, 8));
         dot.setLayoutParams(dlp);
         dot.setBackgroundColor(Color.rgb(0, 176, 255));
         row.addView(dot);
@@ -260,7 +263,7 @@ public class SecurityAwarenessActivity extends Activity {
         bodyView.setTextSize(13f);
         bodyView.setLineSpacing(0, 1.4f);
         int bp = UiKit.dp(this, 10);
-        bodyView.setPadding(bp + UiKit.dp(this, 13), UiKit.dp(this, 4), bp, UiKit.dp(this, 8));
+        bodyView.setPaddingRelative(bp + UiKit.dp(this, 13), UiKit.dp(this, 4), bp, UiKit.dp(this, 8));
         bodyView.setVisibility(View.GONE);
         bodyView.setBackgroundColor(Color.rgb(4, 4, 4));
 
@@ -268,7 +271,8 @@ public class SecurityAwarenessActivity extends Activity {
         row.setOnClickListener(v -> {
             open[0] = !open[0];
             bodyView.setVisibility(open[0] ? View.VISIBLE : View.GONE);
-            chevron.setRotation(open[0] ? 90f : 0f);
+            chevron.setImageResource(open[0] ? R.drawable.ic_chevron_down
+                    : R.drawable.ic_chevron_right);
         });
         row.setClickable(true);
         row.setFocusable(true);

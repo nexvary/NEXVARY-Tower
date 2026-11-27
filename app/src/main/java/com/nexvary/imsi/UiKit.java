@@ -133,13 +133,15 @@ public final class UiKit {
         nav.setBackgroundColor(Color.rgb(5, 5, 5));
 
         boolean ar = LanguageUtil.current(a).equals("ar");
+        root.setLayoutDirection(ar ? View.LAYOUT_DIRECTION_RTL : View.LAYOUT_DIRECTION_LTR);
         addNavItem(a, nav, R.drawable.ic_nav_home,     ar ? "الرئيسية" : "Dashboard", 0, selected, MainActivity.class);
         addNavItem(a, nav, R.drawable.ic_nav_cells,    ar ? "الخلايا" : "Cells",      1, selected, CellsActivity.class);
         addNavItem(a, nav, R.drawable.ic_nav_history,  ar ? "السجل" : "History",      2, selected, HistoryActivity.class);
         addNavItem(a, nav, R.drawable.ic_nav_reports,  ar ? "التقارير" : "Reports",   3, selected, ReportsActivity.class);
         addNavItem(a, nav, R.drawable.ic_nav_info,     ar ? "المزيد" : "More",        4, selected, MoreActivity.class);
 
-        root.addView(nav, new LinearLayout.LayoutParams(-1, dp(a, 68)));
+        nav.setMinimumHeight(dp(a, 68));
+        root.addView(nav, new LinearLayout.LayoutParams(-1, -2));
         return root;
     }
 
@@ -147,7 +149,7 @@ public final class UiKit {
                                    int index, int selected, Class<?> target) {
         LinearLayout item = new LinearLayout(a);
         item.setOrientation(LinearLayout.VERTICAL);
-        item.setGravity(Gravity.CENTER);
+        item.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
         item.setPadding(dp(a, 2), dp(a, 4), dp(a, 2), dp(a, 4));
 
         boolean isSelected = index == selected;
@@ -157,13 +159,18 @@ public final class UiKit {
         icon.setImageResource(iconRes);
         // No color filter — preserve multicolor icons; dim non-selected via alpha
         icon.setAlpha(isSelected ? 1.0f : 0.55f);
-        icon.setContentDescription(label);
+        icon.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        icon.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
         item.addView(icon, new LinearLayout.LayoutParams(dp(a, 26), dp(a, 26)));
 
         TextView tv = text(a, label, 9, textColor);
         tv.setGravity(Gravity.CENTER);
         tv.setPadding(0, dp(a, 2), 0, 0);
-        item.addView(tv, new LinearLayout.LayoutParams(-1, dp(a, 18)));
+        item.addView(tv, new LinearLayout.LayoutParams(-1, -2));
+        tv.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        item.setContentDescription(label);
+        item.setSelected(isSelected);
+        item.setFocusable(true);
 
         item.setOnClickListener(v -> {
             if (index == selected) return;

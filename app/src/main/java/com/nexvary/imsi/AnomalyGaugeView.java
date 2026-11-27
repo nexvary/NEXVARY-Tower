@@ -41,11 +41,13 @@ public class AnomalyGaugeView extends View {
     protected void onDraw(Canvas c) {
         super.onDraw(c);
         float w = getWidth(), h = getHeight();
-        float sw = w * 0.09f;
+        float size = Math.min(w, h);
+        float sw = size * 0.08f;
         arc.setStrokeWidth(sw);
         track.setStrokeWidth(sw);
         float margin = sw / 2f + 4f;
-        RectF oval = new RectF(margin, margin, w - margin, h - margin);
+        float radius = Math.max(0f, size / 2f - margin);
+        RectF oval = new RectF(w / 2f - radius, h / 2f - radius, w / 2f + radius, h / 2f + radius);
         // Track (270° arc from 135° to 45°)
         c.drawArc(oval, 135f, 270f, false, track);
         // Score arc
@@ -58,25 +60,11 @@ public class AnomalyGaugeView extends View {
 
         float cx = w / 2f, cy = h / 2f;
         // Score number
-        textP.setTextSize(h * 0.28f);
+        textP.setTextSize(size * 0.28f);
         textP.setColor(color);
-        c.drawText(score + "", cx, cy + h * 0.10f, textP);
-        // "/ 100"
-        textP.setTextSize(h * 0.11f);
-        textP.setColor(Color.rgb(90, 120, 148));
-        c.drawText("/ 100", cx, cy + h * 0.26f, textP);
-        // Label
-        textP.setTextSize(h * 0.11f);
-        textP.setColor(color);
-        RectF labelBg = new RectF(cx - w * 0.32f, cy + h * 0.30f, cx + w * 0.32f, cy + h * 0.47f);
-        Paint bg = new Paint(Paint.ANTI_ALIAS_FLAG);
-        bg.setColor(color & 0x33FFFFFF);
-        c.drawRoundRect(labelBg, 20f, 20f, bg);
-        c.drawText(label, cx, cy + h * 0.43f, textP);
-        // Disclaimer
-        textP.setTextSize(h * 0.085f);
-        textP.setColor(Color.rgb(90, 120, 148));
-        String dis = isAr() ? "مؤشر احتمالي وليس إثباتًا" : "Probabilistic indicator only";
-        c.drawText(dis, cx, h - 6f, textP);
+        c.drawText(score + "", cx, cy + size * 0.08f, textP);
+        // Limit the custom view to the number. The severity and explanatory
+        // text live in measured TextViews underneath to prevent overlaps.
+
     }
 }

@@ -1,0 +1,10 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="32dp" android:height="32dp"
+    android:viewportWidth="32" android:viewportHeight="32">
+    <!-- Red rounded rect -->
+    <path android:fillColor="#FF0000"
+        android:pathData="M4,10 C4,8.3 5.3,7 7,7 L25,7 C26.7,7 28,8.3 28,10 L28,22 C28,23.7 26.7,25 25,25 L7,25 C5.3,25 4,23.7 4,22 Z"/>
+    <!-- White play triangle -->
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M13,10.5 L22,16 L13,21.5 Z"/>
+</vector>

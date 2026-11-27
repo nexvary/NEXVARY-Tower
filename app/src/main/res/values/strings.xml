@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <string name="app_name">NEXVARY Tower Guard</string>
-<string name="version_label">TOWER GUARD · v0.7</string>
+<string name="version_label">TOWER GUARD · v0.7.0</string>
 <string name="offline">OFFLINE · No Internet</string>
 <string name="monitoring_off">Monitoring off</string>
 <string name="monitoring_on">Active · local only</string>

@@ -9,7 +9,7 @@ import android.widget.*;
 public class OnboardingActivity extends Activity {
     private static final String PREF="nexvary_ui", DONE="onboarding_done";
     @Override public void onCreate(Bundle b){
-        LanguageUtil.apply(this); super.onCreate(b); getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+        LanguageUtil.apply(this); super.onCreate(b); SecureScreenUtil.apply(this);
         if(getSharedPreferences(PREF,MODE_PRIVATE).getBoolean(DONE,false)){ openMain(); return; }
         render();
     }

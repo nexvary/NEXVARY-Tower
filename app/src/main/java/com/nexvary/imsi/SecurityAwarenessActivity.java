@@ -17,7 +17,7 @@ public class SecurityAwarenessActivity extends Activity {
     public void onCreate(Bundle b) {
         LanguageUtil.apply(this);
         super.onCreate(b);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+        SecureScreenUtil.apply(this);
 
         ScrollView scroll = new ScrollView(this);
         scroll.setBackgroundColor(Color.rgb(2, 7, 13));
@@ -31,12 +31,16 @@ public class SecurityAwarenessActivity extends Activity {
         buildUi(page);
     }
 
+    @Override public void onBackPressed() { finish(); }
+
+
     private boolean ar() {
         return LanguageUtil.current(this).equals("ar");
     }
 
     private void buildUi(LinearLayout page) {
         boolean ar = ar();
+        page.addView(UiKit.backButton(this));
         page.addView(UiKit.eyebrow(this, ar ? "\u0645\u0631\u0643\u0632 \u0627\u0644\u0648\u0639\u064a \u0627\u0644\u0623\u0645\u0646\u064a" : "SECURITY KNOWLEDGE CENTER"));
         page.addView(UiKit.title(this, ar ? "\u0627\u0644\u062a\u0648\u0639\u064a\u0629 \u0627\u0644\u0623\u0645\u0646\u064a\u0629" : "Security Awareness"));
         page.addView(UiKit.body(this, ar

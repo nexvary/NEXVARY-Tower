@@ -39,7 +39,7 @@ public class MainActivity extends Activity {
     @Override public void onCreate(Bundle b) {
         LanguageUtil.apply(this);
         super.onCreate(b);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+        SecureScreenUtil.apply(this);
         android.view.View screen = getLayoutInflater().inflate(R.layout.activity_main, null);
         setContentView(UiKit.withBottomNav(this, screen, 0));
         tel = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);

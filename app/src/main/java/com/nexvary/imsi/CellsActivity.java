@@ -14,7 +14,7 @@ public class CellsActivity extends Activity {
     @Override public void onCreate(Bundle b) {
         LanguageUtil.apply(this);
         super.onCreate(b);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+        SecureScreenUtil.apply(this);
         ScrollView scroll = new ScrollView(this);
         scroll.setBackgroundColor(Color.rgb(2, 7, 13));
         LinearLayout page = UiKit.page(this);

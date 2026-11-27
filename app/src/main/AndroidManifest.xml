@@ -15,26 +15,41 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:theme="@style/Theme.Nexvary"
         android:supportsRtl="true">
-        <activity android:name=".OnboardingActivity" android:exported="true" android:screenOrientation="unspecified">
+        <activity android:name=".OnboardingActivity" android:exported="true"
+            android:screenOrientation="unspecified">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" android:exported="false" android:screenOrientation="unspecified" />
-        <activity android:name=".CellsActivity" android:exported="false" android:screenOrientation="unspecified" />
-        <activity android:name=".HistoryActivity" android:exported="false" />
-        <activity android:name=".ReportsActivity" android:exported="false" />
-        <activity android:name=".MoreActivity" android:exported="false" />
-        <activity android:name=".BaselinesActivity" android:exported="false" />
-        <activity android:name=".PrivacyActivity" android:exported="false" />
-        <activity android:name=".AboutActivity" android:exported="false" />
-        <activity android:name=".SecurityAwarenessActivity" android:exported="false" />
+        <activity android:name=".MainActivity" android:exported="false"
+            android:screenOrientation="unspecified" />
+        <activity android:name=".CellsActivity" android:exported="false"
+            android:screenOrientation="unspecified" />
+        <activity android:name=".HistoryActivity" android:exported="false"
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".ReportsActivity" android:exported="false"
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".MoreActivity" android:exported="false"
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".BaselinesActivity" android:exported="false"
+            android:parentActivityName=".MoreActivity" />
+        <activity android:name=".PrivacyActivity" android:exported="false"
+            android:parentActivityName=".MoreActivity" />
+        <activity android:name=".AboutActivity" android:exported="false"
+            android:parentActivityName=".MoreActivity" />
+        <activity android:name=".AboutNexvaryActivity" android:exported="false"
+            android:parentActivityName=".MoreActivity" />
+        <activity android:name=".SecurityAwarenessActivity" android:exported="false"
+            android:parentActivityName=".MoreActivity" />
         <provider
             android:name=".ReportFileProvider"
             android:authorities="${applicationId}.files"
             android:exported="false"
             android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
         </provider>
     </application>
 </manifest>

@@ -1,0 +1,18 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <!-- Document body — silver -->
+    <path android:fillColor="#C0C0C0"
+        android:pathData="M6,2 L15,2 L18,5 L18,22 L6,22 Z M6,4 L6,20 L16,20 L16,6 L14,6 L14,4 Z"/>
+    <!-- Folded corner — muted -->
+    <path android:fillColor="#606060"
+        android:pathData="M14,2 L14,6 L18,6 Z"/>
+    <!-- PDF text lines — electric blue -->
+    <path android:fillColor="#00B0FF"
+        android:pathData="M8,9 L14,9 L14,10 L8,10 Z M8,12 L14,12 L14,13 L8,13 Z M8,15 L11,15 L11,16 L8,16 Z"/>
+    <!-- PDF badge — red -->
+    <path android:fillColor="#FF1744"
+        android:pathData="M13,15 L16,15 L16,17 L13,17 Z"/>
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M13.3,15.3 L15.7,15.3 L15.7,16.7 L13.3,16.7 Z"/>
+</vector>

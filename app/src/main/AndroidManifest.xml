@@ -29,6 +29,7 @@
         <activity android:name=".BaselinesActivity" android:exported="false" />
         <activity android:name=".PrivacyActivity" android:exported="false" />
         <activity android:name=".AboutActivity" android:exported="false" />
+        <activity android:name=".SecurityAwarenessActivity" android:exported="false" />
         <provider
             android:name=".ReportFileProvider"
             android:authorities="${applicationId}.files"

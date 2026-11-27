@@ -37,7 +37,7 @@ public class MoreActivity extends Activity {
         // Language toggle card
         addCardRow(page, R.drawable.ic_more_language,
                 ar ? "English / \u0639\u0631\u0628\u064a\u0629" : "\u0627\u0644\u0639\u0631\u0628\u064a\u0629 / EN",
-                () -> { LanguageUtil.toggle(this); recreate(); });
+                this::switchLanguage);
 
         // Screenshot prevention switch
         addScreenshotSwitch(page, ar);
@@ -81,6 +81,14 @@ public class MoreActivity extends Activity {
         footer.setTextSize(12f);
         page.addView(footer);
         page.addView(UiKit.gap(this, 6));
+    }
+
+    private void switchLanguage() {
+        LanguageUtil.toggle(this);
+        // Rebuild the task so previously opened tabs also use the new locale.
+        Intent dashboard = new Intent(this, MainActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivities(new Intent[]{dashboard, new Intent(this, MoreActivity.class)});
     }
 
     private void addSectionLabel(LinearLayout page, String text) {

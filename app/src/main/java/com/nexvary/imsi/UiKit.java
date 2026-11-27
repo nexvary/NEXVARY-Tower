@@ -121,6 +121,10 @@ public final class UiKit {
         root.setBackgroundColor(Color.BLACK);
         root.setClipToPadding(false);
         applySystemBars(root);
+        // Tabs can be brought to the front without calling Activity.onCreate again.
+        root.getViewTreeObserver().addOnWindowFocusChangeListener(hasFocus -> {
+            if (hasFocus) SecureScreenUtil.apply(a);
+        });
 
         FrameLayout body = new FrameLayout(a);
         body.addView(content, new FrameLayout.LayoutParams(-1, -1));

@@ -116,3 +116,4 @@ versionCode 7 / versionName 0.7.0
 - Kept the Knowledge Center content collapsed by default and improved the disclaimer contrast and type size.
 - CI runs lintDebug, assembleDebug and testDebugUnitTest. The new JVM tests check the five navigation vectors and Reports path bounds.
 - Debug version is 0.7.0 (7). OPPO CPH2577 hardware acceptance and owner approval for permanent signing are pending.
+- Language switching rebuilds the tab stack so re-opened tabs use the selected locale. Returning to previously opened tabs reapplies the current screenshot preference.

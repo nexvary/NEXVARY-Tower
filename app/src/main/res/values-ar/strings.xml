@@ -45,4 +45,6 @@
 <string name="more_tab">المزيد</string>
 <string name="dashboard_tab">الرئيسية</string>
 <string name="history_tab">السجل</string>
+<string name="anomaly_waiting">بانتظار الفحص</string>
+<string name="anomaly_disclaimer">مؤشر احتمالي لا يثبت الاعتراض</string>
 </resources>

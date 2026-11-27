@@ -19,6 +19,9 @@ Android compares signing identities on update. If the installed APK has a differ
 
 ## Provision GitHub Actions
 
+On a trusted Windows computer, the [interactive PowerShell setup](../scripts/Initialize-TowerGuardSigning.ps1) can generate or reuse the PKCS12 key, verify copies on two separate encrypted backup drives, and set the restricted GitHub environment variables and secrets through the GitHub CLI. The script prompts for the password locally. Run it from a PowerShell window with two existing encrypted backup directories and the highest version code actually distributed. The primary copy defaults to a directory under the local Windows user profile.
+
+
 Create a `tower-guard-release` environment with access restricted to reviewed release refs and authorized reviewers where available. Restrict changes to the environment and workflow to authorized maintainers. Set these **environment secrets**:
 
 | Secret | Value |

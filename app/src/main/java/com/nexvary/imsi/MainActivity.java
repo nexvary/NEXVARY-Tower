@@ -96,7 +96,10 @@ public class MainActivity extends Activity {
 
     private void ensureAndScan(boolean fromLive) {
         List<String> missing = new ArrayList<>();
-        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) missing.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            missing.add(Manifest.permission.ACCESS_FINE_LOCATION);
+            missing.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+        }
         if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) missing.add(Manifest.permission.READ_PHONE_STATE);
         if (!missing.isEmpty()) { requestPermissions(missing.toArray(new String[0]), REQ); return; }
         scan(fromLive);

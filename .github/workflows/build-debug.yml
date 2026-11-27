@@ -16,12 +16,8 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Grant execute permission
-        run: chmod +x gradlew
-      - name: Run lint
-        run: ./gradlew lintDebug --no-daemon
-      - name: Build debug APK
-        run: ./gradlew assembleDebug --no-daemon
+      - name: Verify Android build
+        run: ./gradlew --no-daemon :app:lintDebug :app:testDebugUnitTest :app:assembleDebug
       - name: Compute SHA-256
         run: sha256sum app/build/outputs/apk/debug/app-debug.apk
       - name: Upload APK artifact

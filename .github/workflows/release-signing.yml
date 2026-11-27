@@ -2,6 +2,8 @@ name: Tower Guard signed APK
 
 on:
   workflow_dispatch:
+  push:
+    branches: [release/tower-guard-signed]
 
 permissions:
   contents: read
@@ -81,6 +83,12 @@ jobs:
           printf 'version=%s\n' "$version" >> "$GITHUB_OUTPUT"
           sha256sum NEXVARY-Tower-Guard.apk > NEXVARY-Tower-Guard.apk.sha256
           sha256sum --check NEXVARY-Tower-Guard.apk.sha256
+          stat --format='%s' NEXVARY-Tower-Guard.apk > NEXVARY-Tower-Guard.apk.size-bytes.txt
+          "$tools/aapt" dump permissions NEXVARY-Tower-Guard.apk > release-permissions.txt
+          if grep -Fq "android.permission.INTERNET" release-permissions.txt; then
+            echo 'Unexpected INTERNET permission in release APK' >&2
+            exit 1
+          fi
       - uses: actions/upload-artifact@v4
         with:
           name: tower-signing-qa
@@ -92,6 +100,9 @@ jobs:
     needs: sign
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/download-artifact@v4
         with:
           name: tower-signing-qa
@@ -107,16 +118,7 @@ jobs:
           api-level: 35
           arch: x86_64
           target: google_apis
-          script: |
-            adb install -g baseline.apk
-            adb shell dumpsys package com.nexvary.imsi > before.txt
-            adb install -r NEXVARY-Tower-Guard.apk
-            adb shell dumpsys package com.nexvary.imsi > after.txt
-            for field in firstInstallTime 'userId|appId'; do before=$(grep -m1 -E "^ *($field)=" before.txt); test -n "$before"; grep -Fx "$before" after.txt; done
-            grep -E "^[[:space:]]+versionCode=$RELEASE_VERSION([[:space:]]|$)" after.txt
-            grep -F 'android.permission.READ_PHONE_STATE: granted=true' before.txt
-            grep -F 'android.permission.READ_PHONE_STATE: granted=true' after.txt
-            sha256sum --check NEXVARY-Tower-Guard.apk.sha256
+          script: bash scripts/verify-release-upgrade.sh
       - uses: actions/upload-artifact@v4
         with:
           name: NEXVARY-Tower-Guard-release-vc${{ needs.sign.outputs.version }}
@@ -124,6 +126,10 @@ jobs:
             NEXVARY-Tower-Guard.apk
             NEXVARY-Tower-Guard.apk.sha256
             NEXVARY-Tower-Guard.apk.signature.txt
+            NEXVARY-Tower-Guard.apk.size-bytes.txt
+            release-badging.txt
+            release-permissions.txt
             before.txt
             after.txt
+            upgrade-verification.txt
           if-no-files-found: error

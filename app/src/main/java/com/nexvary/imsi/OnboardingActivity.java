@@ -18,7 +18,7 @@ public class OnboardingActivity extends Activity {
         ScrollView scroll=new ScrollView(this); UiKit.applySystemBars(scroll); scroll.setClipToPadding(false); LinearLayout p=UiKit.page(this); scroll.addView(p);
         ImageView logo=new ImageView(this); logo.setImageResource(R.drawable.nexvary_logo); LinearLayout.LayoutParams ilp=new LinearLayout.LayoutParams(UiKit.dp(this,84),UiKit.dp(this,84)); logo.setLayoutParams(ilp); p.addView(logo);
         p.addView(UiKit.eyebrow(this,"NEXVARY LABS · PRIVATE CELLULAR AWARENESS"));
-        p.addView(UiKit.title(this,ar?"مرحبًا بك في NEXVARY IMSI Detector":"Welcome to NEXVARY IMSI Detector"));
+        p.addView(UiKit.title(this,ar?"مرحبًا بك في NEXVARY Tower Guard":"Welcome to NEXVARY Tower Guard"));
         p.addView(UiKit.body(this,ar?"أداة دفاعية تساعدك على ملاحظة التغيّرات غير المعتادة في بيئة الشبكة الخلوية. التطبيق لا يستطيع إثبات وجود IMSI Catcher بصورة قطعية، لكنه يجمع عدة مؤشرات للمراجعة.":"A defensive tool for noticing unusual changes in the cellular environment. It cannot conclusively prove an IMSI catcher is present; it combines several indicators for review."));
         p.addView(UiKit.gap(this,10));
         p.addView(UiKit.eyebrow(this,ar?"الخصوصية أولًا":"PRIVACY FIRST"));

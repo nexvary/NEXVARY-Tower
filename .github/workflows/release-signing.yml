@@ -26,8 +26,9 @@ jobs:
       - uses: gradle/actions/wrapper-validation@v4
       - name: Verify Release lint and regression tests
         run: ./gradlew --no-daemon :app:lintRelease :app:testReleaseUnitTest
-      - uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 # v3.2.2
+      - name: Expose the runner Android SDK command-line tools
         if: github.ref == 'refs/heads/feature/tower-guard-production-release'
+        run: echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
       - name: Build isolated QA APKs with a disposable CI key
         if: github.ref == 'refs/heads/feature/tower-guard-production-release'
         id: preflight
@@ -83,7 +84,8 @@ jobs:
           distribution: temurin
           java-version: '17'
       - uses: gradle/actions/wrapper-validation@v4
-      - uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 # v3.2.2
+      - name: Expose the runner Android SDK command-line tools
+        run: echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
       - name: Install Android SDK packages
         run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
       - name: Build and sign release and upgrade baseline

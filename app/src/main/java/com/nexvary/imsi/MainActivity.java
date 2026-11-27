@@ -19,7 +19,7 @@ public class MainActivity extends Activity {
     private static final long LIVE_INTERVAL_MS = 8_000L;
 
     private TelephonyManager tel;
-    private TextView liveState, monitorStatusPill, infoCellId, infoEnodeB, infoBand, infoTech, infoOperator;
+    private TextView liveState, monitorStatusPill, infoCellId, infoEnodeB, infoBand, infoTech, infoOperator, anomalySeverity;
     private Button liveButton;
     private AnomalyGaugeView anomalyGauge;
     private CircularMeasureView gaugeRsrp, gaugeRsrq, gaugeSinr, gaugeRssi, gaugeNetwork;
@@ -46,6 +46,7 @@ public class MainActivity extends Activity {
         store = new SecureStore(this);
 
         anomalyGauge   = screen.findViewById(R.id.anomalyGauge);
+        anomalySeverity = screen.findViewById(R.id.anomalySeverity);
         gaugeRsrp      = screen.findViewById(R.id.gaugeRsrp);
         gaugeRsrq      = screen.findViewById(R.id.gaugeRsrq);
         gaugeSinr      = screen.findViewById(R.id.gaugeSinr);
@@ -207,6 +208,11 @@ public class MainActivity extends Activity {
             saveHistory(old);
 
             anomalyGauge.setScore(a.score);
+            boolean arSeverity = LanguageUtil.current(this).equals("ar");
+            anomalySeverity.setText(a.score >= 65 ? (arSeverity ? "مرتفع" : "High") :
+                    a.score >= 30 ? (arSeverity ? "متوسط" : "Medium") : (arSeverity ? "منخفض" : "Low"));
+            anomalySeverity.setTextColor(a.score >= 65 ? Color.rgb(255, 57, 78) :
+                    a.score >= 30 ? Color.rgb(255, 181, 63) : Color.rgb(41, 241, 139));
             refreshChangeMap();
 
             if (rat.contains("2G") && (previous == null || !previous.radio.contains("2G")) && !fromLive) show2GWarning();

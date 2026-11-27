@@ -57,8 +57,8 @@ public class MoreActivity extends Activity {
 
         page.addView(UiKit.gap(this, 16));
         page.addView(UiKit.eyebrow(this, ar ? "عن التطبيق" : "ABOUT"));
-        Button about = UiKit.button(this, ar ? "عن المطور" : "ABOUT DEVELOPER");
-        about.setOnClickListener(v -> startActivity(new android.content.Intent(this, AboutActivity.class)));
+        Button about = UiKit.button(this, ar ? "عن التطبيق والتوعية الأمنية" : "About & Security Awareness");
+        about.setOnClickListener(v -> startActivity(new android.content.Intent(this, SecurityAwarenessActivity.class)));
         page.addView(about);
 
         page.addView(UiKit.gap(this, 20));

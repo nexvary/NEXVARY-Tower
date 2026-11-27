@@ -45,4 +45,6 @@
 <string name="more_tab">MORE</string>
 <string name="dashboard_tab">DASHBOARD</string>
 <string name="history_tab">HISTORY</string>
+<string name="anomaly_waiting">Waiting for scan</string>
+<string name="anomaly_disclaimer">Indicator only · not proof</string>
 </resources>

@@ -39,7 +39,7 @@
 
 <div dir="rtl" align="right">
 <h3>التثبيت والخصوصية</h3>
-<p>اضغط «تحميل التطبيق»، ثم افتح ملف APK على هاتفك واتبع التعليمات. إذا رفض Android التحديث بسبب اختلاف شهادة نسخة Debug المثبّتة، احفظ التقارير التي تحتاجها قبل إزالة النسخة القديمة. إزالة التطبيق تحذف بياناته المحلية.</p>
+<p>اضغط «تحميل التطبيق»، ثم افتح ملف APK على هاتفك واتبع التعليمات.</p>
 <p>يُجري التطبيق التحليل على الجهاز دون إذن الإنترنت. تختلف القياسات المتاحة حسب الهاتف والشبكة والأذونات. مؤشر الشذوذ يساعدك على تحديد ما يستحق المراجعة، ولا يكفي وحده لإثبات اعتراض الاتصالات.</p>
 <p><strong>تواصل مع Nexvary Inc.</strong><br>
 <a href="https://nexvary.com/">الموقع الرسمي</a> · <a href="https://www.facebook.com/share/14p9krEn5ij/">فيسبوك</a> · <a href="https://www.youtube.com/@NexvaryInc">يوتيوب</a> · <a href="https://x.com/Nexvary">X</a> · <a href="mailto:info@nexvary.com">البريد الإلكتروني</a></p>
@@ -67,7 +67,7 @@ Carrier details and cell and channel identifiers are masked in the dashboard cap
 
 ### Install and privacy
 
-Select **Download the app**, open the APK on your Android phone, and follow the installation prompt. If Android rejects an update because the installed Debug build uses a different certificate, save any reports you need before uninstalling it. Uninstalling removes local app data.
+Select **Download the app**, open the APK on your Android phone, and follow the installation prompt.
 
 Analysis runs on your phone without Internet permission. Available measurements depend on the device, network and permissions. The anomaly indicator can guide review, but cannot establish whether interception occurred.
 

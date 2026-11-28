@@ -10,6 +10,17 @@
 
 <p align="center"><a href="https://github.com/nexvary/NEXVARY-Tower/releases/download/v0.7.0/NEXVARY-Tower-Guard-0.7.0-vc10-release.apk"><strong>تحميل مباشر للـAPK · Direct APK download</strong></a><br>Android 10+ · 0.7.0 · Build 10</p>
 
+## كيف يحدث اعتراض المكالمات؟ · How could a call be intercepted?
+
+<p align="center"><strong>Tower Guard أداة دفاعية ترصد مؤشرات الخطر في الشبكة الخلوية.</strong><br><strong>Tower Guard is a defensive tool for spotting unusual cellular activity.</strong></p>
+
+<p align="center">
+  <a href="docs/media/cellular-awareness-ar.png"><img src="docs/media/cellular-awareness-ar.png" width="385" alt="شرح عربي لمسار المكالمة، ومحاولة اعتراض محتملة، ودور Tower Guard في رصد تغيّرات الخلايا والإشارة وعرض مؤشر الشذوذ"></a>
+  <a href="docs/media/cellular-awareness-en.png"><img src="docs/media/cellular-awareness-en.png" width="385" alt="English guide to the usual call path, possible interception, and how Tower Guard flags unusual cellular changes"></a>
+</p>
+
+<p align="center"><a href="https://sls.eff.org/technologies/cell-site-simulators-imsi-catchers">عن محاكيات الأبراج الخلوية · About cell-site simulators (EFF)</a></p>
+
 ## العربية
 
 <div dir="rtl" align="right">

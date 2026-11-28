@@ -18,8 +18,8 @@
 
 <table align="center">
   <tr>
-    <td width="50%" align="center"><a href="docs/media/cellular-awareness-ar.png"><img src="docs/media/cellular-awareness-ar.png" width="385" alt="شرح عربي لمسار المكالمة، ومحاولة اعتراض محتملة، ودور Tower Guard في رصد تغيّرات الخلايا والإشارة وعرض مؤشر الشذوذ"></a></td>
-    <td width="50%" align="center"><a href="docs/media/cellular-awareness-en.png"><img src="docs/media/cellular-awareness-en.png" width="385" alt="English guide to the usual call path, possible interception, and how Tower Guard flags unusual cellular changes"></a></td>
+    <td width="50%" align="center"><a href="docs/media/tower-network-illustration-ar.png"><img src="docs/media/tower-network-illustration-ar.png" width="385" alt="شرح عربي لمسار المكالمة، ومحاولة اعتراض محتملة، ودور Tower Guard في رصد تغيّرات الخلايا والإشارة وعرض مؤشر الشذوذ"></a></td>
+    <td width="50%" align="center"><a href="docs/media/tower-network-illustration-en.png"><img src="docs/media/tower-network-illustration-en.png" width="385" alt="English guide to the usual call path, possible interception, and how Tower Guard flags unusual cellular changes"></a></td>
   </tr>
 </table>
 
